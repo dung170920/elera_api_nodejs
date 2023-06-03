@@ -1,18 +1,24 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-const UserScheme = new mongoose.Schema({
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password: string;
+  avatar: string;
+  isDisable: boolean;
+}
+
+const UserScheme: Schema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true },
   avatar: { type: String, required: false },
   isDisable: { type: Boolean, default: false },
-  authentication: {
-    password: { type: String, required: true, select: false },
-  },
+  password: { type: String, required: true },
 });
 
-const UserModel = mongoose.model("User", UserScheme);
+const UserModel = mongoose.model<IUser>("User", UserScheme);
 
-export const getUsers = () => UserModel.find();
+export const getUsers = () => UserModel.find({ isDisable: true });
 
 export const getUserByEmail = (email: string) =>
   UserModel.findOne({ email: email });
@@ -26,4 +32,4 @@ export const updateUser = (id: string, values: Record<string, any>) =>
   UserModel.findByIdAndUpdate(id, values);
 
 export const disableUser = (id: string) =>
-  UserModel.findByIdAndUpdate(id, { isActive: false }, { new: true });
+  UserModel.findByIdAndUpdate(id, { isDisable: true }, { new: true });

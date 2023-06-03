@@ -1,13 +1,38 @@
-import { addCourse, getCourseById, getCourses } from "../db/models";
+import {
+  addCourse,
+  getCourseById,
+  getCourses,
+  editCourse,
+  deleteCourse,
+  ICourse,
+} from "../db/models";
 import { Request, Response } from "express";
+import log from "../utils/logger";
 
 export const getCourseList = async (req: Request, res: Response) => {
   try {
     const courses = await getCourses();
-    return res.status(200).json(courses);
+
+    const transformedCourses = courses.map((course: any) => {
+      return {
+        id: course._id,
+        title: course.title,
+        description: course.description,
+        price: course.price,
+        imageUrl: course.imageUrl,
+        courseType: {
+          id: course.courseType._id,
+          name: course.courseType.name,
+        },
+        rate: course.rate,
+        studentsCount: course.studentsCount,
+      };
+    });
+
+    return res.status(200).json(transformedCourses);
   } catch (error) {
     console.log(error);
-    return res.sendStatus(400);
+    return res.status(400);
   }
 };
 
@@ -19,7 +44,7 @@ export const getCourse = async (req: Request, res: Response) => {
     if (course) {
       return res.status(200).json(course);
     }
-    return res.sendStatus(404).json({ message: "Course not found" });
+    return res.status(404).json({ message: "Course not found" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error" });
@@ -33,6 +58,20 @@ export const createCourse = async (req: Request, res: Response) => {
       return res.status(200).json(course);
     }
   } catch (error) {
+    log.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const updateCourse = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    await editCourse(id, req.body);
+
+    return res.status(200).json({ message: "Course updated" });
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

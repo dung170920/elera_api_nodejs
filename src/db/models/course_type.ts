@@ -2,10 +2,12 @@ import mongoose, { Schema, Document } from "mongoose";
 
 interface ICourseType extends Document {
   name: string;
+  isDisable: boolean;
 }
 
 const CourseTypeScheme: Schema = new mongoose.Schema({
   name: { type: String, required: true },
+  isDisable: { type: Boolean, default: false },
 });
 
 const CourseTypeModel = mongoose.model<ICourseType>(
@@ -13,7 +15,7 @@ const CourseTypeModel = mongoose.model<ICourseType>(
   CourseTypeScheme
 );
 
-export const getCourseTypes = () => CourseTypeModel.find();
+export const getCourseTypes = () => CourseTypeModel.find({ isDisable: false });
 
 export const getCourseTypeById = (id: string) =>
   CourseTypeModel.findOne({ _id: id });
@@ -21,8 +23,8 @@ export const getCourseTypeById = (id: string) =>
 export const addCourseType = (values: Record<string, any>) =>
   new CourseTypeModel(values).save().then((type) => type.toObject());
 
-export const updateCourseType = (id: string, values: Record<string, any>) =>
+export const editCourseType = (id: string, values: Record<string, any>) =>
   CourseTypeModel.findByIdAndUpdate(id, values);
 
-export const disableCourseType = (id: string) =>
-  CourseTypeModel.findByIdAndUpdate(id, { isActive: false }, { new: true });
+export const deleteCourseType = (id: string) =>
+  CourseTypeModel.findByIdAndUpdate(id, { isDisable: true }, { new: true });

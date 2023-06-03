@@ -1,13 +1,27 @@
-import { addCourseType, getCourseTypeById, getCourseTypes } from "../db/models";
+import {
+  addCourseType,
+  editCourseType,
+  getCourseTypeById,
+  getCourseTypes,
+  deleteCourseType,
+} from "../db/models";
 import { Request, Response } from "express";
 
 export const getCourseTypeList = async (req: Request, res: Response) => {
   try {
     const types = await getCourseTypes();
-    return res.status(200).json(types);
+
+    const transformedTypes = types.map((type) => {
+      return {
+        id: type._id,
+        name: type.name,
+      };
+    });
+
+    return res.status(200).json(transformedTypes);
   } catch (error) {
     console.log(error);
-    return res.sendStatus(400);
+    return res.status(400);
   }
 };
 
@@ -17,22 +31,51 @@ export const getCourseType = async (req: Request, res: Response) => {
 
     const type = await getCourseTypeById(id);
     if (type) {
-      return res.status(200).json(type);
+      return res.status(200).json({
+        id: type._id,
+        name: type.name,
+      });
     }
-    return res.sendStatus(404).json({ message: "Type not found" });
+    return res.status(404).json({ message: "Type not found" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const createCourseType = async (req: Request, res: Response) => {
+  try {
+    const type = await addCourseType(req.body);
+    if (type) {
+      return res.status(200);
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const updateCourseType = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    await editCourseType(id, req.body);
+
+    return res.status(200).json({ message: "Course type updated" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-export const createCourseType = async (req: Request, res: Response) => {
+export const disableCourseType = async (req: Request, res: Response) => {
   try {
-    const course = await addCourseType(req.body);
-    if (course) {
-      return res.status(200).json(course);
-    }
+    const { id } = req.params;
+
+    await deleteCourseType(id);
+
+    return res.status(200).json({ message: "Type deleted successfully" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
