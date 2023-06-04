@@ -36,11 +36,16 @@ const CourseScheme: Schema = new mongoose.Schema({
 
 const CourseModel = mongoose.model<ICourse>("Course", CourseScheme);
 
-export const getCourses = () =>
+export const getCourses = (pageNumber: number, pageSize: number) =>
   CourseModel.find({ isDisable: false })
+    .sort({ _id: -1 })
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize)
     .populate("courseType")
     .populate("mentor")
     .exec();
+
+export const countCourses = () => CourseModel.countDocuments();
 
 export const getCourseById = (id: string) => CourseModel.findOne({ _id: id });
 

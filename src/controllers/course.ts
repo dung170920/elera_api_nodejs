@@ -5,13 +5,24 @@ import {
   editCourse,
   deleteCourse,
   ICourse,
+  countCourses,
 } from "../models";
 import { Request, Response } from "express";
 import log from "../utils/logger";
 
 export const getCourseList = async (req: Request, res: Response) => {
   try {
-    const courses = await getCourses();
+    const { pageNumber, pageSize } = req.query;
+
+    const parsePageNumber = Number(pageNumber);
+    const parsePageSize = Number(pageSize);
+
+    if (isNaN(parsePageNumber) || isNaN(parsePageSize)) {
+      res.status(400).json({ error: "Invalid page number and page size" });
+    }
+
+    const totalCourses = await countCourses();
+    const courses = await getCourses(parsePageNumber, parsePageSize);
 
     const transformedCourses = courses.map((course: any) => {
       return {
@@ -29,7 +40,12 @@ export const getCourseList = async (req: Request, res: Response) => {
       };
     });
 
-    return res.status(200).json(transformedCourses);
+    return res.status(200).json({
+      data: transformedCourses,
+      pageNumber: parsePageNumber,
+      total: totalCourses,
+      pageSize: parsePageSize,
+    });
   } catch (error) {
     console.log(error);
     return res.status(400);

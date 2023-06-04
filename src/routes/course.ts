@@ -44,6 +44,19 @@ export default (router: Router) => {
    *     summary: Get a list of courses
    *     tags:
    *      - Courses
+   *     parameters:
+   *       - in: query
+   *         name: pageNumber
+   *         schema:
+   *           type: number
+   *           minimum: 1
+   *           default: 1
+   *       - in: query
+   *         name: pageSize
+   *         schema:
+   *           type: number
+   *           minimum: 1
+   *           default: 10
    *     responses:
    *       200:
    *         description: Response success.
