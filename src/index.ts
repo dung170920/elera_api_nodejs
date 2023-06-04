@@ -2,8 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import * as dotenv from "dotenv";
-import { connectDB } from "./db/connection";
-import { swaggerDocs } from "./utils";
+import { swaggerDocs, connectDB } from "./utils";
 import router from "./routes";
 
 dotenv.config();

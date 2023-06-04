@@ -4,7 +4,7 @@ import {
   getCourseTypeById,
   getCourseTypes,
   deleteCourseType,
-} from "../db/models";
+} from "../models";
 import { Request, Response } from "express";
 
 export const getCourseTypeList = async (req: Request, res: Response) => {

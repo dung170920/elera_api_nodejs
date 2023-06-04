@@ -5,7 +5,7 @@ import {
   editCourse,
   deleteCourse,
   ICourse,
-} from "../db/models";
+} from "../models";
 import { Request, Response } from "express";
 import log from "../utils/logger";
 

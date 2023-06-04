@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { IRequest, IToken } from "../interfaces";
-import { getUserById } from "../db/models";
+import { getUserById } from "../models";
 
 const key = process.env.JWT_SECRET_KEY || "";
 
@@ -15,8 +15,10 @@ const auth = async (req: IRequest, res: Response, next: NextFunction) => {
 
     if (user) {
       req.user = user;
+      next();
+    } else {
+      res.status(401).json({ message: "Unauthorized" });
     }
-    next();
   } catch (error) {
     console.log(error);
   }
