@@ -59,9 +59,13 @@ export const register = async (req: Request, res: Response) => {
       name,
     });
 
-    const token = jwt.sign({ email, id: result._id, name }, key, {
-      expiresIn: 60 * 60,
-    });
+    const token = jwt.sign(
+      { email, id: result._id, name, avatar: result.avatar },
+      key,
+      {
+        expiresIn: 60 * 60,
+      }
+    );
 
     return res
       .status(200)

@@ -8,7 +8,6 @@ import {
   countCourses,
 } from "../models";
 import { Request, Response } from "express";
-import log from "../utils/logger";
 
 export const getCourseList = async (req: Request, res: Response) => {
   try {
@@ -74,7 +73,6 @@ export const createCourse = async (req: Request, res: Response) => {
       return res.status(200).json(course);
     }
   } catch (error) {
-    log.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };

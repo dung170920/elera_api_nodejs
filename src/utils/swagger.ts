@@ -1,8 +1,8 @@
-import { Express, Request, Response } from "express";
+import { Express } from "express";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { version } from "../../package.json";
-import log from "./logger";
+import { log } from "./logger";
 
 const options: swaggerJsdoc.Options = {
   swaggerDefinition: {
@@ -19,7 +19,8 @@ const options: swaggerJsdoc.Options = {
     components: {
       securitySchemes: {
         bearerAuth: {
-          type: "apiKey",
+          type: "http",
+          scheme: "bearer",
           name: "Authorization",
           in: "header",
         },

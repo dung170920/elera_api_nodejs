@@ -1,12 +1,11 @@
-import { NextFunction, Request } from "express";
+import { NextFunction, Request, Response } from "express";
+import { log } from "../utils";
 
-function loggerMiddleware(
+export function loggerMiddleware(
   request: Request,
   response: Response,
   next: NextFunction
 ) {
-  console.log(`${request.method} ${request.path}`);
+  log.info(`${request.method} ${request.path}`);
   next();
 }
-
-export default loggerMiddleware;

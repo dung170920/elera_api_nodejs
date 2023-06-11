@@ -8,7 +8,7 @@ const stream = pretty({
   ignore: "time,hostname,pid",
 });
 
-const log = logger(
+export const log = logger(
   {
     base: {
       pid: false,
@@ -17,5 +17,3 @@ const log = logger(
   },
   stream
 );
-
-export default log;
