@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { faker } from "@faker-js/faker";
 
 export interface IUser extends Document {
   name: string;
@@ -6,6 +7,7 @@ export interface IUser extends Document {
   password: string;
   avatar: string;
   isDisable: boolean;
+  // role: string;
 }
 
 const UserScheme: Schema = new mongoose.Schema({
@@ -33,3 +35,23 @@ export const updateUser = (id: string, values: Record<string, any>) =>
 
 export const disableUser = (id: string) =>
   UserModel.findByIdAndUpdate(id, { isDisable: true }, { new: true });
+
+export async function generateFakeUser() {
+  // const user = {
+  //   name: faker.person.fullName(),
+  //   email: faker.internet.email(),
+  //   avatar: faker.image.avatar(),
+  //   password: faker.internet.password(),
+  //   isDisable: false,
+  // };
+
+  for (let index = 0; index < 50; index++) {
+    await createUser({
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      avatar: faker.image.avatar(),
+      password: faker.internet.password(),
+      isDisable: false,
+    });
+  }
+}

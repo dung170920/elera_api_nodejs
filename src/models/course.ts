@@ -36,7 +36,11 @@ const CourseScheme: Schema = new mongoose.Schema({
 
 const CourseModel = mongoose.model<ICourse>("Course", CourseScheme);
 
-export const getCourses = (pageNumber: number, pageSize: number) =>
+export const getCourses = (
+  pageNumber: number,
+  pageSize: number
+  // courseTypeId: mongoose.Schema.Types.ObjectId
+) =>
   CourseModel.find({ isDisable: false })
     .sort({ _id: -1 })
     .skip((pageNumber - 1) * pageSize)

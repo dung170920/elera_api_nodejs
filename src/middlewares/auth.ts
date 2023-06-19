@@ -20,6 +20,8 @@ export const authCheck = async (
 
       if (user) {
         req.user = user;
+        next();
+        return;
       }
     }
     res.status(401).json({ message: "Unauthorized" });
