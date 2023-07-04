@@ -15,7 +15,6 @@ const options: swaggerJsdoc.Options = {
         url: "https://opensource.org/licenses/MIT",
       },
     },
-    basePath: "/api",
     components: {
       securitySchemes: {
         bearerAuth: {

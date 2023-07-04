@@ -7,16 +7,27 @@ export interface IUser extends Document {
   password: string;
   avatar: string;
   isDisable: boolean;
-  // role: string;
+  role: string;
 }
 
-const UserScheme: Schema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-  avatar: { type: String, required: false },
-  isDisable: { type: Boolean, default: false },
-  password: { type: String, required: true },
-});
+const UserScheme: Schema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    avatar: { type: String, required: false },
+    isDisable: { type: Boolean, default: false },
+    password: { type: String, required: true },
+  },
+  {
+    toJSON: {
+      virtuals: true,
+      versionKey: false,
+      transform: function (doc, ret) {
+        delete ret._id;
+      },
+    },
+  }
+);
 
 const UserModel = mongoose.model<IUser>("User", UserScheme);
 
@@ -37,14 +48,6 @@ export const disableUser = (id: string) =>
   UserModel.findByIdAndUpdate(id, { isDisable: true }, { new: true });
 
 export async function generateFakeUser() {
-  // const user = {
-  //   name: faker.person.fullName(),
-  //   email: faker.internet.email(),
-  //   avatar: faker.image.avatar(),
-  //   password: faker.internet.password(),
-  //   isDisable: false,
-  // };
-
   for (let index = 0; index < 50; index++) {
     await createUser({
       name: faker.person.fullName(),

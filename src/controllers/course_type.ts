@@ -11,14 +11,9 @@ export const getCourseTypeList = async (req: Request, res: Response) => {
   try {
     const types = await getCourseTypes();
 
-    const transformedTypes = types.map((type) => {
-      return {
-        id: type._id,
-        name: type.name,
-      };
+    return res.status(200).json({
+      data: types,
     });
-
-    return res.status(200).json(transformedTypes);
   } catch (error) {
     console.log(error);
     return res.status(400);
@@ -60,7 +55,7 @@ export const updateCourseType = async (req: Request, res: Response) => {
 
     await editCourseType(id, req.body);
 
-    return res.status(200).json({ message: "Course type updated" });
+    return res.status(200).json({ message: "Type updated" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Internal server error" });

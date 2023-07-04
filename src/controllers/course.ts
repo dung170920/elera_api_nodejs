@@ -8,6 +8,7 @@ import {
   countCourses,
 } from "../models";
 import { Request, Response } from "express";
+import { ErrorCode, errorHandler } from "../utils";
 
 export const getCourseList = async (req: Request, res: Response) => {
   try {
@@ -23,31 +24,15 @@ export const getCourseList = async (req: Request, res: Response) => {
     const totalCourses = await countCourses();
     const courses = await getCourses(parsePageNumber, parsePageSize);
 
-    const transformedCourses = courses.map((course: any) => {
-      return {
-        id: course._id,
-        title: course.title,
-        description: course.description,
-        price: course.price,
-        imageUrl: course.imageUrl,
-        courseType: {
-          id: course.courseType._id,
-          name: course.courseType.name,
-        },
-        rate: course.rate,
-        studentsCount: course.studentsCount,
-      };
-    });
-
     return res.status(200).json({
-      data: transformedCourses,
+      data: courses,
       pageNumber: parsePageNumber,
       total: totalCourses,
       pageSize: parsePageSize,
     });
   } catch (error) {
     console.log(error);
-    return res.status(400);
+    return errorHandler(res, ErrorCode.InternalServerError, error.message);
   }
 };
 

@@ -65,7 +65,7 @@ export default (router: Router) => {
    *       400:
    *         description: Invalid request body
    */
-  router.post("/api/auth/register", register);
+  router.post("/auth/register", register);
 
   /**
    * @swagger

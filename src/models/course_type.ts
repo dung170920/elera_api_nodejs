@@ -5,10 +5,21 @@ interface ICourseType extends Document {
   isDisable: boolean;
 }
 
-const CourseTypeScheme: Schema = new mongoose.Schema({
-  name: { type: String, required: true },
-  isDisable: { type: Boolean, default: false },
-});
+const CourseTypeScheme: Schema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    isDisable: { type: Boolean, default: false },
+  },
+  {
+    toJSON: {
+      virtuals: true,
+      versionKey: false,
+      transform: function (doc, ret) {
+        delete ret._id;
+      },
+    },
+  }
+);
 
 const CourseTypeModel = mongoose.model<ICourseType>(
   "CourseType",
