@@ -49,10 +49,14 @@ const CourseModel = mongoose.model<ICourse>("Course", CourseScheme);
 
 export const getCourses = (
   pageNumber: number,
-  pageSize: number
-  // courseTypeId: mongoose.Schema.Types.ObjectId
+  pageSize: number,
+  courseTypeId?: string
 ) =>
-  CourseModel.find({ isDisable: false })
+  CourseModel.find(
+    courseTypeId
+      ? { isDisable: false, courseType: courseTypeId }
+      : { isDisable: false }
+  )
     .sort({ _id: -1 })
     .skip((pageNumber - 1) * pageSize)
     .limit(pageSize)
@@ -74,4 +78,4 @@ export const editCourse = (id: string, values: Record<string, any>) =>
   CourseModel.findByIdAndUpdate(id, values);
 
 export const deleteCourse = (id: string) =>
-  CourseModel.findByIdAndUpdate(id, { isDisable: true }, { new: true });
+  CourseModel.findByIdAndUpdate(id, { isDisable: false }, { new: true });

@@ -1,5 +1,6 @@
-import { login, register } from "../controllers";
+import { getNewToken, login, register } from "../controllers";
 import { Router } from "express";
+import { verifyRefreshToken } from "../middlewares";
 
 /**
  * @swagger
@@ -65,7 +66,7 @@ export default (router: Router) => {
    *       400:
    *         description: Invalid request body
    */
-  router.post("/auth/register", register);
+  router.post("/api/auth/register", register);
 
   /**
    * @swagger
@@ -87,6 +88,30 @@ export default (router: Router) => {
    *         description: Invalid request body
    */
   router.post("/api/auth/login", login);
+
+  /**
+   * @swagger
+   * /api/auth/refresh-token:
+   *   post:
+   *     summary: Refresh access token
+   *     tags:
+   *      - Auth
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *              properties:
+   *                refreshToken:
+   *                  type: string
+   *                  description: The refresh token
+   *     responses:
+   *       200:
+   *         description: Response success
+   *       400:
+   *         description: Invalid request body
+   */
+  router.post("/api/auth/refresh-token", getNewToken);
 
   // router.post("/auth/login-google", loginGoogle);
 };

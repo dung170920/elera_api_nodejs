@@ -57,6 +57,10 @@ export default (router: Router) => {
    *           type: number
    *           minimum: 1
    *           default: 10
+   *       - in: query
+   *         name: courseTypeId
+   *         schema:
+   *           type: string
    *     responses:
    *       200:
    *         description: Response success.

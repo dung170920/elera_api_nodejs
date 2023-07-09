@@ -1,7 +1,6 @@
 import {
   createCourseType,
   disableCourseType,
-  getCourseType,
   getCourseTypeList,
   updateCourseType,
 } from "../controllers";

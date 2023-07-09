@@ -1,87 +1,94 @@
+import { responseHandler } from "../utils";
 import { createUser, getUserByEmail } from "../models";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import "dotenv/config";
-import { ErrorCode, errorHandler } from "../utils";
-
-const key = process.env.JWT_SECRET_KEY || "";
+import {
+  signAccessToken,
+  signRefreshToken,
+  verifyRefreshToken,
+} from "../middlewares";
+import { loginValidation, registerValidation } from "../validation";
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
+    const { value, error } = loginValidation.validate(req.body);
 
-    if (!email || !password) {
-      return errorHandler(res, ErrorCode.BadRequest);
+    if (error.isJoi === true) {
+      const { details } = error;
+      const message = details.map((i) => i.message).join(",");
+
+      return responseHandler(res, 400, message);
     }
 
-    const user = await getUserByEmail(email);
+    const user = await getUserByEmail(value.email);
 
     if (!user) {
-      return errorHandler(res, ErrorCode.NotFound, "User doesn't exist");
+      return responseHandler(res, 404, "User doesn't exist");
     }
 
-    const passwordCorrect = bcrypt.compare(password, user.password);
+    const passwordCorrect = bcrypt.compare(value.password, user.password);
 
-    if (!passwordCorrect)
-      return errorHandler(res, ErrorCode.BadRequest, "Password is incorrect");
+    if (!passwordCorrect) {
+      return responseHandler(res, 400, "Password is incorrect");
+    }
 
-    const token = jwt.sign(
-      { email: user.email, id: user._id, name: user.name, avatar: user.avatar },
-      key,
-      { expiresIn: 60 * 60 }
-    );
+    const accessToken = signAccessToken(user.id);
+    const refreshToken = signRefreshToken(user.id);
 
-    return res.status(200).json({
-      result: token,
+    return responseHandler(res, 200, "Login successfully", {
+      accessToken,
+      refreshToken,
     });
   } catch (error) {
-    console.log(error);
-    return errorHandler(res, ErrorCode.InternalServerError);
+    return responseHandler(res, 500, error.message);
   }
 };
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password, confirmPassword, name } = req.body;
+    const { value, error } = registerValidation.validate(req.body);
 
-    const user = await getUserByEmail(email);
-
-    if (user) {
-      return res.status(409).json({ message: "User is already existed" });
+    if (error.isJoi === true) {
+      const { details } = error;
+      const message = details.map((i) => i.message).join(",");
+      return responseHandler(res, 400, message);
     }
 
-    if (password !== confirmPassword)
-      return res
-        .status(400)
-        .json({ message: "Password and confirm password doesn't match" });
+    const user = await getUserByEmail(value.email);
 
-    bcrypt.hash(password, 12, async (err, hashPassword) => {
-      if (err) {
-        return res.status(501).json({ message: err.message });
-      }
+    if (user) {
+      return responseHandler(res, 409, "User is already existed");
+    }
+
+    bcrypt.hash(value.password, 12, async (error, hashPassword) => {
       const result = await createUser({
-        email,
+        email: value.email,
         password: hashPassword,
-        name,
+        name: value.name,
       });
 
-      const token = jwt.sign(
-        { email, id: result._id, name, avatar: result.avatar },
-        key,
-        {
-          expiresIn: 60 * 60,
-        }
-      );
+      const accessToken = signAccessToken(result.id);
+      const refreshToken = signRefreshToken(result.id);
 
-      return res.status(201).json({
-        message: "Register successfully",
-        result: token,
+      return responseHandler(res, 200, "Register successfully", {
+        accessToken,
+        refreshToken,
       });
     });
   } catch (error) {
-    // return res.status(500).json({
-    //   message: "Internal server error",
-    // });
+    return responseHandler(res, 500, error.message);
+  }
+};
+
+export const getNewToken = (req: Request, res: Response) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+    }
+
+    const decoded = verifyRefreshToken(refreshToken);
+  } catch (error) {
+    return responseHandler(res, 500, error.message);
   }
 };

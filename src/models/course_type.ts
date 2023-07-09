@@ -38,4 +38,4 @@ export const editCourseType = (id: string, values: Record<string, any>) =>
   CourseTypeModel.findByIdAndUpdate(id, values);
 
 export const deleteCourseType = (id: string) =>
-  CourseTypeModel.findByIdAndUpdate(id, { isDisable: true }, { new: true });
+  CourseTypeModel.findByIdAndUpdate(id, { isDisable: false }, { new: true });

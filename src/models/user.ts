@@ -31,10 +31,13 @@ const UserScheme: Schema = new mongoose.Schema(
 
 const UserModel = mongoose.model<IUser>("User", UserScheme);
 
-export const getUsers = () => UserModel.find({ isDisable: true });
+export const getUserList = (role?: string) =>
+  UserModel.find(
+    role ? { isDisable: false, role } : { isDisable: false, role }
+  );
 
 export const getUserByEmail = (email: string) =>
-  UserModel.findOne({ email: email });
+  UserModel.findOne({ email, isDisable: false });
 
 export const getUserById = (id: string) => UserModel.findOne({ _id: id });
 
@@ -44,8 +47,8 @@ export const createUser = (values: Record<string, any>) =>
 export const updateUser = (id: string, values: Record<string, any>) =>
   UserModel.findByIdAndUpdate(id, values);
 
-export const disableUser = (id: string) =>
-  UserModel.findByIdAndUpdate(id, { isDisable: true }, { new: true });
+export const deleteUser = (id: string) =>
+  UserModel.findByIdAndUpdate(id, { isDisable: false }, { new: true });
 
 export async function generateFakeUser() {
   for (let index = 0; index < 50; index++) {

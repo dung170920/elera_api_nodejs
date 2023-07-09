@@ -1,6 +1,24 @@
 import { Request, Response } from "express";
-import { getUserById } from "../models";
+import { getUserById, getUserList } from "../models";
 import mongoose from "mongoose";
+import { responseHandler } from "../utils";
+
+export const getUsers = async (req: Request, res: Response) => {
+  try {
+    const { role } = req.query;
+
+    const users = getUserList(role?.toString().toLowerCase());
+
+    return responseHandler(res, 200, "Get list of user successfully", {
+      data: users,
+      // pageNumber: parsePageNumber,
+      // pageSize: parsePageSize,
+      // totalPages: Math.ceil(count / parsePageSize),
+    });
+  } catch (error) {
+    return responseHandler(res, 500, error.message);
+  }
+};
 
 export const getUser = async (req: Request, res: Response) => {
   try {
@@ -9,13 +27,12 @@ export const getUser = async (req: Request, res: Response) => {
     if (mongoose.Types.ObjectId.isValid(id)) {
       const user = await getUserById(id);
       if (user) {
-        return res.status(200).json(user);
+        return responseHandler(res, 200, "Get user successfully", user);
       }
     }
 
-    return res.status(404).json({ message: "User not found" });
+    return responseHandler(res, 404, "User not found");
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    return responseHandler(res, 500, error.message);
   }
 };

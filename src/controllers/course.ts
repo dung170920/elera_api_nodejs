@@ -4,35 +4,38 @@ import {
   getCourses,
   editCourse,
   deleteCourse,
-  ICourse,
   countCourses,
 } from "../models";
 import { Request, Response } from "express";
-import { ErrorCode, errorHandler } from "../utils";
+import { responseHandler } from "../utils";
 
 export const getCourseList = async (req: Request, res: Response) => {
   try {
-    const { pageNumber, pageSize } = req.query;
+    const { pageNumber, pageSize, courseTypeId } = req.query;
 
     const parsePageNumber = Number(pageNumber);
     const parsePageSize = Number(pageSize);
 
     if (isNaN(parsePageNumber) || isNaN(parsePageSize)) {
-      res.status(400).json({ error: "Invalid page number and page size" });
+      return responseHandler(res, 400, "Invalid page number and page size");
     }
 
-    const totalCourses = await countCourses();
-    const courses = await getCourses(parsePageNumber, parsePageSize);
+    const courses = await getCourses(
+      parsePageNumber,
+      parsePageSize,
+      courseTypeId?.toString()
+    );
 
-    return res.status(200).json({
+    const count = await countCourses();
+
+    return responseHandler(res, 200, "Get list of course successfully", {
       data: courses,
       pageNumber: parsePageNumber,
-      total: totalCourses,
       pageSize: parsePageSize,
+      totalPages: Math.ceil(count / parsePageSize),
     });
   } catch (error) {
-    console.log(error);
-    return errorHandler(res, ErrorCode.InternalServerError, error.message);
+    return responseHandler(res, 500, error.message);
   }
 };
 
@@ -42,12 +45,11 @@ export const getCourse = async (req: Request, res: Response) => {
 
     const course = await getCourseById(id);
     if (course) {
-      return res.status(200).json(course);
+      return responseHandler(res, 200, "Get course successfully", course);
     }
-    return res.status(404).json({ message: "Course not found" });
+    return responseHandler(res, 404, "Course not found");
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return responseHandler(res, 500, error.message);
   }
 };
 
@@ -55,10 +57,10 @@ export const createCourse = async (req: Request, res: Response) => {
   try {
     const course = await addCourse(req.body);
     if (course) {
-      return res.status(200).json(course);
+      return responseHandler(res, 201, "Course created successfully", course);
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    return responseHandler(res, 500, error.message);
   }
 };
 
@@ -68,9 +70,20 @@ export const updateCourse = async (req: Request, res: Response) => {
 
     await editCourse(id, req.body);
 
-    return res.status(200).json({ message: "Course updated" });
+    return responseHandler(res, 200, "Course updated successfully");
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal server error" });
+    return responseHandler(res, 500, error.message);
+  }
+};
+
+export const disableCourse = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    await deleteCourse(id);
+
+    return responseHandler(res, 200, "Course type disabled successfully");
+  } catch (error) {
+    return responseHandler(res, 500, error.message);
   }
 };
