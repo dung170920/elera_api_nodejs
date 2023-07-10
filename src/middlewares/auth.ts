@@ -45,29 +45,30 @@ export const verifyAccessToken = (
           next();
           return;
         }
-
-        if (err) console.log(err.message);
       }
     );
   }
   responseHandler(res, 401);
 };
 
-export const verifyRefreshToken = (refreshToken: string) => {
+export const verifyRefreshToken = (
+  refreshToken: string
+): Promise<string | null> => {
   return new Promise((resolve, reject) => {
     jwt.verify(
       refreshToken,
       refreshTokenKey,
       (err: VerifyErrors, payload: JwtPayload) => {
-        if (err) return reject();
-        const userId = payload.aud;
+        if (err) return reject(err);
+        const userId = payload.aud.toString();
         //   client.GET(userId, (err, result) => {
         //     if (err) {
         //       console.log(err.message);
         //       reject(createError.InternalServerError());
         //       return;
         //     }
-        //     if (refreshToken === result) return resolve(userId);
+        //     if (refreshToken === result)
+        return resolve(userId);
         //     reject(createError.Unauthorized());
         //   });
       }

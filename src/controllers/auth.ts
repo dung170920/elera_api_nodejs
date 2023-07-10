@@ -13,7 +13,7 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { value, error } = loginValidation.validate(req.body);
 
-    if (error.isJoi === true) {
+    if (error) {
       const { details } = error;
       const message = details.map((i) => i.message).join(",");
 
@@ -48,7 +48,7 @@ export const register = async (req: Request, res: Response) => {
   try {
     const { value, error } = registerValidation.validate(req.body);
 
-    if (error.isJoi === true) {
+    if (error) {
       const { details } = error;
       const message = details.map((i) => i.message).join(",");
       return responseHandler(res, 400, message);
@@ -80,14 +80,23 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const getNewToken = (req: Request, res: Response) => {
+export const getNewToken = async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
     }
 
-    const decoded = verifyRefreshToken(refreshToken);
+    const userId = await verifyRefreshToken(refreshToken);
+
+    if (!userId) {
+      return responseHandler(res, 401);
+    }
+    const accessToken = signAccessToken(userId ?? "");
+
+    return responseHandler(res, 200, "Refresh token successfully", {
+      accessToken,
+    });
   } catch (error) {
     return responseHandler(res, 500, error.message);
   }
