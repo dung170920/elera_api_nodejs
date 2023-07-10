@@ -64,7 +64,12 @@ export const getCourses = (
     .populate("mentor", "-password -role")
     .exec();
 
-export const countCourses = () => CourseModel.countDocuments();
+export const countCourses = (courseTypeId?: string) =>
+  CourseModel.countDocuments(
+    courseTypeId
+      ? { isDisable: false, courseType: courseTypeId }
+      : { isDisable: false }
+  );
 
 export const getCourseById = (id: string) =>
   CourseModel.findOne({ _id: id })

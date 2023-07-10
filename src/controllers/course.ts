@@ -26,7 +26,7 @@ export const getCourseList = async (req: Request, res: Response) => {
       courseTypeId?.toString()
     );
 
-    const count = await countCourses();
+    const count = await countCourses(courseTypeId?.toString());
 
     return responseHandler(res, 200, "Get list of course successfully", {
       data: courses,

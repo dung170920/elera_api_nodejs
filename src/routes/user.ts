@@ -55,6 +55,18 @@ export default (router: Router) => {
    *      - Users
    *     parameters:
    *       - in: query
+   *         name: pageNumber
+   *         schema:
+   *           type: number
+   *           minimum: 1
+   *           default: 1
+   *       - in: query
+   *         name: pageSize
+   *         schema:
+   *           type: number
+   *           minimum: 1
+   *           default: 10
+   *       - in: query
    *         name: role
    *         schema:
    *           type: string
@@ -65,7 +77,7 @@ export default (router: Router) => {
    *       400:
    *         description: Invalid request body
    */
-  router.post("/api/users", getUsers);
+  router.get("/api/users", getUsers);
 
   // router.post("/auth/login-google", loginGoogle);
 };

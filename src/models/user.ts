@@ -17,6 +17,7 @@ const UserScheme: Schema = new mongoose.Schema(
     avatar: { type: String, required: false },
     isDisable: { type: Boolean, default: false },
     password: { type: String, required: true },
+    role: { type: String, required: true },
   },
   {
     toJSON: {
@@ -31,9 +32,21 @@ const UserScheme: Schema = new mongoose.Schema(
 
 const UserModel = mongoose.model<IUser>("User", UserScheme);
 
-export const getUserList = (role?: string) =>
-  UserModel.find(
-    role ? { isDisable: false, role } : { isDisable: false, role }
+export const getUserList = (
+  pageNumber: number,
+  pageSize: number,
+  role?: string
+) =>
+  UserModel.find(role ? { isDisable: false, role } : { isDisable: false })
+    .sort({ _id: -1 })
+    .select("-password")
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize)
+    .exec();
+
+export const countUsers = (role?: string) =>
+  UserModel.countDocuments(
+    role ? { isDisable: false, role } : { isDisable: false }
   );
 
 export const getUserByEmail = (email: string) =>
