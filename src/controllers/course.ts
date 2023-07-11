@@ -20,13 +20,21 @@ export const getCourseList = async (req: Request, res: Response) => {
       return responseHandler(res, 400, "Invalid page number and page size");
     }
 
+    const count = await countCourses(courseTypeId?.toString());
+    if (!count) {
+      return responseHandler(res, 200, "Get list of course successfully", {
+        data: [],
+        pageNumber: parsePageNumber,
+        pageSize: parsePageSize,
+        totalPages: 0,
+      });
+    }
+
     const courses = await getCourses(
       parsePageNumber,
       parsePageSize,
       courseTypeId?.toString()
     );
-
-    const count = await countCourses(courseTypeId?.toString());
 
     return responseHandler(res, 200, "Get list of course successfully", {
       data: courses,

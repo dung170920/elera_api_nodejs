@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { currentDate } from "../utils";
 
 export interface ICourse extends Document {
   title: string;
@@ -32,7 +33,10 @@ const CourseScheme: Schema = new mongoose.Schema(
     reviewsCount: { type: Number, default: 0 },
     rate: { type: Number, default: 0 },
     isDisable: { type: Boolean, default: false },
-    createAt: { type: Date, default: new Date() },
+    createAt: {
+      type: Date,
+      default: currentDate(),
+    },
   },
   {
     toJSON: {

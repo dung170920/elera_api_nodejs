@@ -1,6 +1,5 @@
 import { getNewToken, login, register } from "../controllers";
 import { Router } from "express";
-import { verifyRefreshToken } from "../middlewares";
 
 /**
  * @swagger

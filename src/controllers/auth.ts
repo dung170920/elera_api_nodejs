@@ -85,6 +85,7 @@ export const getNewToken = async (req: Request, res: Response) => {
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
+      return responseHandler(res, 400, "Invalid request token");
     }
 
     const userId = await verifyRefreshToken(refreshToken);

@@ -18,21 +18,18 @@ export function signAccessToken(userId: string) {
   return jwt.sign(payload, accessTokenKey, options);
 }
 
-export function signRefreshToken(userId: string) {
-  return new Promise((resolve, reject) => {
+export async function signRefreshToken(userId: string) {
+  try {
     const token = jwt.sign({}, refreshTokenKey, {
       expiresIn: "1y",
       audience: userId,
       issuer: "elera.com",
     });
-    setValue(userId, token, 365 * 24 * 60 * 60)
-      .then((result) => {
-        return resolve(token);
-      })
-      .catch((err) => {
-        return reject(err);
-      });
-  });
+    await setValue(userId, token, 365 * 24 * 60 * 60);
+    return token;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export const verifyAccessToken = (
@@ -67,7 +64,7 @@ export const verifyRefreshToken = (
     jwt.verify(
       refreshToken,
       refreshTokenKey,
-      async (err: VerifyErrors, payload: JwtPayload) => {
+      (err: VerifyErrors, payload: JwtPayload) => {
         if (err) return reject(err);
         const userId = payload.aud.toString();
         getValue(userId)

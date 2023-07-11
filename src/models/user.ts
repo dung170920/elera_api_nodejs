@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { faker } from "@faker-js/faker";
+import { currentDate } from "../utils";
 
 export interface IUser extends Document {
   name: string;
@@ -8,6 +8,8 @@ export interface IUser extends Document {
   avatar: string;
   isDisable: boolean;
   role: string;
+  createAt: Date;
+  enrolledCourses: mongoose.Schema.Types.ObjectId[];
 }
 
 const UserScheme: Schema = new mongoose.Schema(
@@ -18,6 +20,11 @@ const UserScheme: Schema = new mongoose.Schema(
     isDisable: { type: Boolean, default: false },
     password: { type: String, required: true },
     role: { type: String, required: true },
+    createAt: {
+      type: Date,
+      default: currentDate(),
+    },
+    enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
   },
   {
     toJSON: {
@@ -63,14 +70,7 @@ export const updateUser = (id: string, values: Record<string, any>) =>
 export const deleteUser = (id: string) =>
   UserModel.findByIdAndUpdate(id, { isDisable: false }, { new: true });
 
-export async function generateFakeUser() {
-  for (let index = 0; index < 50; index++) {
-    await createUser({
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-      avatar: faker.image.avatar(),
-      password: faker.internet.password(),
-      isDisable: false,
-    });
-  }
-}
+export const enroll = (courseId: string, id: string) =>
+  UserModel.findByIdAndUpdate(id, {
+    $push: { enrolledCourses: courseId },
+  });

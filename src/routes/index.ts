@@ -11,6 +11,5 @@ export default (): Router => {
   course_type(router);
   auth(router);
   user(router);
-
   return router;
 };

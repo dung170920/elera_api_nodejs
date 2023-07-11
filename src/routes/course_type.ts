@@ -73,8 +73,8 @@ export default (router: Router) => {
    *           schema:
    *             $ref: '#/components/schemas/CourseType'
    *     responses:
-   *       200:
-   *         description: Response success
+   *       201:
+   *         description: Course type created successfully
    *       400:
    *         description: Invalid request body
    */

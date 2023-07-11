@@ -15,25 +15,35 @@ export async function connectToRedis() {
   client.on("error", (err) => console.log("Redis Client Error", err));
 
   await client.connect();
-
-  // await client.disconnect();
 }
 
 export async function setValue(key: string, value: string, expired: number) {
-  let options = {};
-  if (expired) {
-    options = {
-      EX: expired,
-    };
-  }
+  try {
+    let options = {};
+    if (expired) {
+      options = {
+        EX: expired,
+      };
+    }
 
-  await client.set(key, value, options);
+    await client.set(key, value, options);
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function getValue(key: string) {
-  return await client.get(key);
+  try {
+    return await client.get(key);
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function delKey(key: string) {
-  await client.del(key);
+  try {
+    await client.del(key);
+  } catch (error) {
+    throw error;
+  }
 }

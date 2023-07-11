@@ -1,12 +1,12 @@
 import {
   addCourseType,
   editCourseType,
-  getCourseTypeById,
   getCourseTypes,
   deleteCourseType,
 } from "../models";
 import { Request, Response } from "express";
 import { responseHandler } from "../utils";
+import { createCourseTypeValidation } from "../validation";
 
 export const getCourseTypeList = async (req: Request, res: Response) => {
   try {
@@ -43,7 +43,14 @@ export const getCourseTypeList = async (req: Request, res: Response) => {
 
 export const createCourseType = async (req: Request, res: Response) => {
   try {
-    const type = await addCourseType(req.body);
+    const { value, error } = createCourseTypeValidation.validate(req.body);
+
+    if (error) {
+      const { details } = error;
+      const message = details.map((i) => i.message).join(",");
+      return responseHandler(res, 400, message);
+    }
+    const type = await addCourseType(value.name);
     if (type) {
       return responseHandler(res, 201, "Course type created successfully");
     }
