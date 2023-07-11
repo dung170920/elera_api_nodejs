@@ -33,7 +33,7 @@ export const login = async (req: Request, res: Response) => {
     }
 
     const accessToken = signAccessToken(user.id);
-    const refreshToken = signRefreshToken(user.id);
+    const refreshToken = await signRefreshToken(user.id);
 
     return responseHandler(res, 200, "Login successfully", {
       accessToken,
@@ -68,7 +68,7 @@ export const register = async (req: Request, res: Response) => {
       });
 
       const accessToken = signAccessToken(result.id);
-      const refreshToken = signRefreshToken(result.id);
+      const refreshToken = await signRefreshToken(result.id);
 
       return responseHandler(res, 200, "Register successfully", {
         accessToken,

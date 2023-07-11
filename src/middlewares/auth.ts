@@ -2,7 +2,7 @@ import { Response, NextFunction } from "express";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import { IRequest } from "../interfaces";
 import { getUserById } from "../models";
-import { responseHandler } from "../utils";
+import { getValue, responseHandler, setValue } from "../utils";
 import "dotenv/config";
 
 const accessTokenKey = process.env.JWT_ACCESS_TOKEN_KEY || "";
@@ -19,10 +19,19 @@ export function signAccessToken(userId: string) {
 }
 
 export function signRefreshToken(userId: string) {
-  return jwt.sign({}, refreshTokenKey, {
-    expiresIn: "1y",
-    audience: userId,
-    issuer: "elera.com",
+  return new Promise((resolve, reject) => {
+    const token = jwt.sign({}, refreshTokenKey, {
+      expiresIn: "1y",
+      audience: userId,
+      issuer: "elera.com",
+    });
+    setValue(userId, token, 365 * 24 * 60 * 60)
+      .then((result) => {
+        return resolve(token);
+      })
+      .catch((err) => {
+        return reject(err);
+      });
   });
 }
 
@@ -58,19 +67,18 @@ export const verifyRefreshToken = (
     jwt.verify(
       refreshToken,
       refreshTokenKey,
-      (err: VerifyErrors, payload: JwtPayload) => {
+      async (err: VerifyErrors, payload: JwtPayload) => {
         if (err) return reject(err);
         const userId = payload.aud.toString();
-        //   client.GET(userId, (err, result) => {
-        //     if (err) {
-        //       console.log(err.message);
-        //       reject(createError.InternalServerError());
-        //       return;
-        //     }
-        //     if (refreshToken === result)
-        return resolve(userId);
-        //     reject(createError.Unauthorized());
-        //   });
+        getValue(userId)
+          .then((result) => {
+            if (refreshToken === result) {
+              return resolve(userId);
+            }
+          })
+          .catch((err) => {
+            return reject(err);
+          });
       }
     );
   });
