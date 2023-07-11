@@ -81,7 +81,7 @@ export default (router: Router) => {
 
   /**
    * @swagger
-   * /api/users/enroll:
+   * /api/courses/enroll:
    *   post:
    *     summary: Enroll in a course
    *     tags:
@@ -95,12 +95,9 @@ export default (router: Router) => {
    *                courseId:
    *                  type: string
    *                  description: The id of course
-   *                userId:
-   *                  type: string
-   *                  description: The id of user
    *     responses:
-   *       201:
-   *         description: Course type created successfully
+   *       200:
+   *         description: Enroll in course successfully
    *       400:
    *         description: Invalid request body
    */

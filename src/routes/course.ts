@@ -1,5 +1,12 @@
-import { createCourse, getCourse, getCourseList } from "../controllers";
+import {
+  createCourse,
+  disableCourse,
+  getCourse,
+  getCourseList,
+  updateCourse,
+} from "../controllers";
 import { Router } from "express";
+import { verifyAccessToken } from "../middlewares";
 
 /**
  * @swagger
@@ -108,4 +115,52 @@ export default (router: Router) => {
    *         description: Invalid request body
    */
   router.post("/api/courses", createCourse);
+
+  /**
+   * @swagger
+   * /api/courses/{id}:
+   *   patch:
+   *     summary: Update a course
+   *     tags:
+   *      - Courses
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: string
+   *         required: true
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/Course'
+   *     responses:
+   *       200:
+   *         description: Response success
+   *       404:
+   *         description: Course Type not found
+   */
+  router.patch("/api/courses/:id", updateCourse);
+
+  /**
+   * @swagger
+   * /api/courses/{id}:
+   *   delete:
+   *     summary: Delete a course
+   *     tags:
+   *      - Courses
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         schema:
+   *           type: string
+   *         required: true
+   *     responses:
+   *       200:
+   *         description: Response success
+   *       404:
+   *         description: Course Type not found
+   */
+  router.delete("/api/courses/:id", disableCourse);
 };

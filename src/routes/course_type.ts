@@ -73,7 +73,7 @@ export default (router: Router) => {
    *           schema:
    *             $ref: '#/components/schemas/CourseType'
    *     responses:
-   *       201:
+   *       200:
    *         description: Course type created successfully
    *       400:
    *         description: Invalid request body
@@ -111,7 +111,7 @@ export default (router: Router) => {
    * @swagger
    * /api/course-types/{id}:
    *   delete:
-   *     summary: Delete a course type by ID
+   *     summary: Delete a course type
    *     tags:
    *      - CourseTypes
    *     parameters:

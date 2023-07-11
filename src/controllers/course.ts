@@ -90,7 +90,7 @@ export const disableCourse = async (req: Request, res: Response) => {
 
     await deleteCourse(id);
 
-    return responseHandler(res, 200, "Course type disabled successfully");
+    return responseHandler(res, 200, "Course disabled successfully");
   } catch (error) {
     return responseHandler(res, 500, error.message);
   }
