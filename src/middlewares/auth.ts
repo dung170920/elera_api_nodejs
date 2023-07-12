@@ -50,11 +50,12 @@ export const verifyAccessToken = (
           req.user = user;
           next();
           return;
+        } else {
+          return responseHandler(res, 401);
         }
       }
     );
   }
-  responseHandler(res, 401);
 };
 
 export const verifyRefreshToken = (

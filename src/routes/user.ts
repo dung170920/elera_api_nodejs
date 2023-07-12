@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { enrollCourse, getUser, getUsers } from "../controllers";
+import { getUser, getUsers } from "../controllers";
 import { verifyAccessToken } from "../middlewares";
 
 /**
@@ -78,28 +78,4 @@ export default (router: Router) => {
    *         description: Invalid request body
    */
   router.get("/api/users", getUsers);
-
-  /**
-   * @swagger
-   * /api/courses/enroll:
-   *   post:
-   *     summary: Enroll in a course
-   *     tags:
-   *      - Users
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *              properties:
-   *                courseId:
-   *                  type: string
-   *                  description: The id of course
-   *     responses:
-   *       200:
-   *         description: Enroll in course successfully
-   *       400:
-   *         description: Invalid request body
-   */
-  router.post("/api/users/enroll", verifyAccessToken, enrollCourse);
 };

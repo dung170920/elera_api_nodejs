@@ -24,7 +24,6 @@ const UserScheme: Schema = new mongoose.Schema(
       type: Date,
       default: currentDate(),
     },
-    enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
   },
   {
     toJSON: {
@@ -69,8 +68,3 @@ export const updateUser = (id: string, values: Record<string, any>) =>
 
 export const deleteUser = (id: string) =>
   UserModel.findByIdAndUpdate(id, { isDisable: false }, { new: true });
-
-export const enroll = (courseId: string, id: string) =>
-  UserModel.findByIdAndUpdate(id, {
-    $push: { enrolledCourses: courseId },
-  });
