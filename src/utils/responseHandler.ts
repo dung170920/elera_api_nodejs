@@ -56,8 +56,10 @@ export const responseHandler = (
 ) => {
   const { defaultMessage, statusCode } = errorResponse[err];
   if (message && message.length !== 0) {
-    return res.status(statusCode).json({ message, result });
+    return res.status(statusCode).json({ code: statusCode, message, result });
   } else {
-    return res.status(statusCode).json({ message: defaultMessage, result });
+    return res
+      .status(statusCode)
+      .json({ code: statusCode, message: defaultMessage, result });
   }
 };

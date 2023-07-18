@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "elera-dbc4f",
+  "private_key_id": "9d3b24dc67cb880f889ebb5441a7a8e52e65c480",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD2qjuL3lniFKTw\nsP/W+4nPhySllhEfkiQsDkGk8EZDkGVbti+Qs/0D6GEsEb/9JOvcYgGNAJPPvdnA\nC5odeiDG4BZ9QNIMraBfZUHn8MQiAH0vxUpF73crhcUfLLum9fuyTciBJqAUjqcT\n+tk6Sz3JQFaIhNcyc89CKHihm3tiaMF9SpvahY4+n7oLebQ2GNniKoleA3rYdw1w\n15gBdDQRSV7swrj4u+Ng1EiY7i6VO5MgxOqR37YcU6i5lfFAMjjYX5z8GoCW36EU\nc8Z5PG5ogRvTseDeyaH3G2SBV9lrjp3jstaTWbt1QVg8hMeIQcuCTSLYrvYLlimT\nQ1CHJ2EBAgMBAAECggEACJKokKco9RJWHDZuoeRqqP+PrsCdNj1wS+av8eFW89Sy\nLSKTGyKiTc83B17TjyMIHof6eVHWkU8OIR5WHCWpO3hA19gXpNCpBP/CL2M/EdZ2\nA2HGP9F/kQ/sZrW5jOc6OPt6l0CGKki99lQO1jeUvWiiyUpip1J+ltRMwwMiIeyk\nKrCgY8ERS5pmNtz/VMjftPDPgbprlN7FhTmEWJ1+P/WYmF+eSz12+av63q+s3a6R\nq9kAmb4FdUm7oe18mPkq/Wgk513Mj52b93+JxhSEgvno3fxssGaEM4rhwXNh0FUP\nznFgJOPTXThpx37AzMwxo02YzEQCGFfKLhtHFUJZ1QKBgQD/Tq7qcxqmKFTkKgS6\n0xNzmBL77ZmuOTMzRJDnKo5scWPEIp4yhwJqpFYehqLJS7znHi1tnGIIPK0Fg6JG\newwcb9ZAOLFnQS44BTHscM0+4CFITrto8CyIB7LmiXnAvzGw6jRhTdjICzkW7tfo\n5OQ74JC0/cTxYiz2XVlQmSvWDQKBgQD3VYwIk7uZJBEHzytkWhdMhDJOv5LCY9OO\npW4aq10no/XWz2atSpx6fbomEBkJ0P1+h2tLwpeI6xC3T5BPX0OeLyVFVBeJ9fG+\nzWUrFQR81KtCNXDmQ51mIUz6krpMSwu8OWVw8VNnV0mx9U3A0hCbr6VvBckE0aj6\nzTncWoENxQKBgQCYKbkumrPDXD5cTn7LKoppVrXZ2N7Da+wMHk2OuVpxX5Nqjodi\n7fyOuqtpPi0/dBh+VwoUTiRPbHpi0vWgtC2ftTgoxqFVPQ/i65W5qfFqDANKKUKh\nZKPl31DM/hrGui1PmAboB5GwiJ/Z/zhH4kP1O/6DIMyEYVMS8sgMtX3e8QKBgE+x\n2+5Dk/YTXf1zLpsmQE2iZwdiySojul5DRcgIIXsNZMBzkbUSznrVmi57j2XPVm73\nuYXuzJ8MhxVZ6Lj6jDIjJNJC91a3zc5aJlgMbKbAa/Jof9liPgxTfJdcwfSlVcGv\niNUsnWA2CwPxc71Gsp1Hqnmsloob+GPfzt4Gt4C1AoGAAfaSQkObco2ZXWCozN2j\npDxXviKOnVxQlTBUES+GhzSUOjTk4UU4hFt2sn7huJ8R6fznhU/pD4PuxhUhkwgI\nfc+NZuI9IYS55+zU2Mfd3cToPU8aZLAcSxwF93XxztsX/+bpIN3yOfvHm3DRFiSU\n+ZS3hZWnkhkPXHXNbNkXJA8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "elera-607@elera-dbc4f.iam.gserviceaccount.com",
+  "client_id": "101056382726637576016",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/elera-607%40elera-dbc4f.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

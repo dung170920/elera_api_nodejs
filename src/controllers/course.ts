@@ -5,13 +5,18 @@ import {
   editCourse,
   deleteCourse,
   countCourses,
+  getTopThreeCoursesByEnrollment,
 } from "../models";
 import { Request, Response } from "express";
 import { responseHandler } from "../utils";
+import { IRequest } from "../middlewares";
 
 export const getCourseList = async (req: Request, res: Response) => {
   try {
-    const { pageNumber, pageSize, courseTypeId } = req.query;
+    const { pageNumber, pageSize, courseTypeId, filterBy } = req.query;
+
+    if (filterBy) {
+    }
 
     const parsePageNumber = Number(pageNumber);
     const parsePageSize = Number(pageSize);
@@ -61,24 +66,49 @@ export const getCourse = async (req: Request, res: Response) => {
   }
 };
 
-export const createCourse = async (req: Request, res: Response) => {
+export const createCourse = async (req: IRequest, res: Response) => {
   try {
-    const course = await addCourse(req.body);
-    if (course) {
-      return responseHandler(res, 201, "Course created successfully", course);
-    }
+    const { courseTypeId } = req.body;
+
+    const course = await addCourse({
+      courseType: courseTypeId,
+      mentor: req.user.id,
+      ...req.body,
+    });
+
+    return responseHandler(
+      res,
+      201,
+      "Course created successfully",
+      course.toJSON()
+    );
   } catch (error) {
     return responseHandler(res, 500, error.message);
   }
 };
 
-export const updateCourse = async (req: Request, res: Response) => {
+export const updateCourse = async (req: IRequest, res: Response) => {
   try {
     const { id } = req.params;
 
-    await editCourse(id, req.body);
+    const course = await getCourseById(id);
 
-    return responseHandler(res, 200, "Course updated successfully");
+    if (!course) {
+      return responseHandler(res, 404);
+    }
+
+    if (req.user.id !== course.mentor.id) {
+      return responseHandler(res, 403);
+    }
+
+    const result = await editCourse(id, req.body);
+
+    return responseHandler(
+      res,
+      200,
+      "Course updated successfully",
+      result.toJSON()
+    );
   } catch (error) {
     return responseHandler(res, 500, error.message);
   }

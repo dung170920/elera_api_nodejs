@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { currentDate } from "../utils";
+import { currentDate, formatToJson } from "../utils";
 
 export interface IUser extends Document {
   name: string;
@@ -8,6 +8,7 @@ export interface IUser extends Document {
   avatar: string;
   isDisable: boolean;
   role: string;
+  googleId: string;
   createAt: Date;
   enrolledCourses: mongoose.Schema.Types.ObjectId[];
 }
@@ -18,21 +19,20 @@ const UserScheme: Schema = new mongoose.Schema(
     email: { type: String, required: true },
     avatar: { type: String, required: false },
     isDisable: { type: Boolean, default: false },
-    password: { type: String, required: true },
-    role: { type: String, required: true },
+    password: { type: String },
+    googleId: { type: String },
+    role: {
+      type: String,
+      default: "user",
+      enum: ["user", "mentor", "admin"],
+    },
     createAt: {
       type: Date,
       default: currentDate(),
     },
   },
   {
-    toJSON: {
-      virtuals: true,
-      versionKey: false,
-      transform: function (doc, ret) {
-        delete ret._id;
-      },
-    },
+    toJSON: formatToJson,
   }
 );
 
@@ -58,13 +58,18 @@ export const countUsers = (role?: string) =>
 export const getUserByEmail = (email: string) =>
   UserModel.findOne({ email, isDisable: false });
 
+export const getUserByGoogleId = (id: string) =>
+  UserModel.findOne({ googleId: id });
+
 export const getUserById = (id: string) => UserModel.findOne({ _id: id });
 
 export const createUser = (values: Record<string, any>) =>
-  new UserModel(values).save().then((user) => user.toObject());
+  new UserModel(values).save();
 
 export const updateUser = (id: string, values: Record<string, any>) =>
-  UserModel.findByIdAndUpdate(id, values);
+  UserModel.findByIdAndUpdate(id, values, {
+    new: true,
+  }).exec();
 
 export const deleteUser = (id: string) =>
   UserModel.findByIdAndUpdate(id, { isDisable: false }, { new: true });

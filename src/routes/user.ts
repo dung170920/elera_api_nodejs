@@ -1,81 +1,54 @@
 import { Router } from "express";
-import { getUser, getUsers } from "../controllers";
+import {
+  getNewToken,
+  getUser,
+  getUsers,
+  googleLogin,
+  login,
+  logout,
+  register,
+} from "../controllers";
 import { verifyAccessToken } from "../middlewares";
 
-/**
- * @swagger
- * components:
- *  schemas:
- *    User:
- *      type: object
- *      required:
- *        - name
- *        - email
- *        - password
- *      properties:
- *        name:
- *          type: string
- *          description: The name of user
- *        email:
- *          type: string
- *          description: The email of user
- *        password:
- *          type: string
- *          description: The password of user
- */
-
 export default (router: Router) => {
-  /**
-   * @swagger
-   * /api/users/{id}:
-   *   get:
-   *     summary: Get a user by ID
-   *     tags:
-   *      - Users
-   *     parameters:
-   *       - in: path
-   *         name: id
-   *         schema:
-   *           type: string
-   *         required: true
-   *     responses:
-   *       200:
-   *         description: Response success
-   *       404:
-   *         description: User not found
-   */
-  router.get("/api/users/:id", verifyAccessToken, getUser);
+  router.get("/api/user/:id", verifyAccessToken, getUser);
+
+  router.get("/api/user", getUsers);
+
+  router.post("/api/user/register", register);
+
+  router.post("/api/user/login", login);
+
+  router.post("/api/user/logout", verifyAccessToken, logout);
+
+  router.post("/api/user/refresh-token", getNewToken);
 
   /**
    * @swagger
-   * /api/users:
-   *   get:
-   *     summary: Get list of user
+   * /api/user/google-login:
+   *   post:
+   *     summary: Login account with google
    *     tags:
-   *      - Users
-   *     parameters:
-   *       - in: query
-   *         name: pageNumber
-   *         schema:
-   *           type: number
-   *           minimum: 1
-   *           default: 1
-   *       - in: query
-   *         name: pageSize
-   *         schema:
-   *           type: number
-   *           minimum: 1
-   *           default: 10
-   *       - in: query
-   *         name: role
-   *         schema:
-   *           type: string
-   *           enum: [user, mentor]
+   *      - User
+   *     requestBody:
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/UserGoogleLoginRequest'
    *     responses:
    *       200:
-   *         description: Response success
-   *       400:
-   *         description: Invalid request body
+   *        description: "Success"
+   *        content:
+   *          text/plain:
+   *            schema:
+   *              $ref: "#/components/schemas/APIResponse"
+   *          application/json:
+   *            schema:
+   *              $ref: "#/components/schemas/APIResponse"
+   *          text/json:
+   *            schema:
+   *              $ref: "#/components/schemas/APIResponse"
    */
-  router.get("/api/users", getUsers);
+  router.post("/api/user/google-login", googleLogin);
+  router.get("/api/user/google-login");
 };

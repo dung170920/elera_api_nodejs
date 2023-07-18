@@ -1,6 +1,12 @@
 import { Response } from "express";
 import { IRequest } from "../interfaces";
-import { EnrollmentModel, getCourseById, getUserById } from "../models";
+import {
+  addEnrollment,
+  countEnrollments,
+  getCourseById,
+  getEnrollment,
+  getEnrollments,
+} from "../models";
 import { responseHandler } from "../utils";
 
 export const enrollCourse = async (req: IRequest, res: Response) => {
@@ -12,10 +18,7 @@ export const enrollCourse = async (req: IRequest, res: Response) => {
       return responseHandler(res, 404, "Course not found");
     }
 
-    const existingEnroll = await EnrollmentModel.findOne({
-      user: req.user.id,
-      course: course.id,
-    });
+    const existingEnroll = await getEnrollment(req.user.id, course.id);
 
     if (existingEnroll) {
       return res
@@ -23,19 +26,23 @@ export const enrollCourse = async (req: IRequest, res: Response) => {
         .json({ error: "User is already enrolled in this course" });
     }
 
-    const enroll = new EnrollmentModel({
+    const enroll = await addEnrollment({
       user: req.user.id,
       course: course.id,
     });
-    await enroll.save();
 
-    return responseHandler(res, 200, "Enroll in course successfully", enroll);
+    return responseHandler(
+      res,
+      200,
+      "Enroll in course successfully",
+      enroll.toJSON()
+    );
   } catch (error) {
     return responseHandler(res, 500, error.message);
   }
 };
 
-export const getEnrollments = async (req: IRequest, res: Response) => {
+export const getEnrollmentList = async (req: IRequest, res: Response) => {
   try {
     const { pageNumber, pageSize } = req.query;
 
@@ -46,7 +53,7 @@ export const getEnrollments = async (req: IRequest, res: Response) => {
       return responseHandler(res, 400, "Invalid page number and page size");
     }
 
-    const count = await EnrollmentModel.countDocuments({ user: req.user.id });
+    const count = await countEnrollments(req.user.id);
     if (!count) {
       return responseHandler(res, 200, "Get list of course successfully", {
         data: [],
@@ -55,11 +62,11 @@ export const getEnrollments = async (req: IRequest, res: Response) => {
         totalPages: 0,
       });
     } else {
-      const enrollments = await EnrollmentModel.find({ user: req.user.id })
-        .sort({ _id: -1 })
-        .skip((parsePageNumber - 1) * parsePageSize)
-        .limit(parsePageSize)
-        .exec();
+      const enrollments = await getEnrollments(
+        parsePageNumber,
+        parsePageSize,
+        req.user.id
+      );
 
       return responseHandler(res, 200, "Get list of course successfully", {
         data: enrollments,

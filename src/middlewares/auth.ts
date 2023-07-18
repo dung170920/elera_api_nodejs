@@ -1,9 +1,12 @@
-import { Response, NextFunction } from "express";
+import { Response, NextFunction, Request } from "express";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
-import { IRequest } from "../interfaces";
-import { getUserById } from "../models";
+import { IUser, getUserById } from "../models";
 import { getValue, responseHandler, setValue } from "../utils";
 import "dotenv/config";
+
+export interface IRequest extends Request {
+  user: IUser;
+}
 
 const accessTokenKey = process.env.JWT_ACCESS_TOKEN_KEY || "";
 const refreshTokenKey = process.env.JWT_REFRESH_TOKEN_KEY || "";
@@ -32,29 +35,28 @@ export async function signRefreshToken(userId: string) {
   }
 }
 
-export const verifyAccessToken = (
+export const verifyAccessToken = async (
   req: IRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const token = req?.headers?.authorization?.split("Bearer ")[1] ?? "";
+  try {
+    const token = req?.headers?.authorization?.split("Bearer ")[1] ?? "";
 
-  if (token.length > 0) {
-    jwt.verify(
-      token,
-      accessTokenKey,
-      async (err: VerifyErrors, payload: JwtPayload) => {
-        const user = await getUserById(payload.aud.toString());
+    const payload = jwt.verify(token, accessTokenKey) as JwtPayload;
+    console.log("payload :", payload);
 
-        if (user) {
-          req.user = user;
-          next();
-          return;
-        } else {
-          return responseHandler(res, 401);
-        }
+    if (payload) {
+      const user = await getUserById(payload.aud.toString());
+      if (user) {
+        req.user = user.toJSON();
+        next();
+      } else {
+        return responseHandler(res, 401);
       }
-    );
+    }
+  } catch (error) {
+    return responseHandler(res, 401);
   }
 };
 

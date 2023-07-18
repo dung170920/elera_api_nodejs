@@ -17,15 +17,17 @@ app.use(bodyParser.json());
 app.use(loggerMiddleware);
 
 app.use("/", router());
+app.get("/", (req, res) => {
+  res.redirect("/swagger");
+});
 
 connectDB(process.env.MONGO_URL || "");
-
-connectToRedis();
 
 const port = process.env.PORT || 5000;
 
 swaggerDocs(app, port);
 
-app.listen(port, () => {
+app.listen(port, async () => {
+  await connectToRedis();
   console.log(`Server is running on port: ${port}`);
 });

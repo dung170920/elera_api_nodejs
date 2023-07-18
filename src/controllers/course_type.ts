@@ -50,10 +50,8 @@ export const createCourseType = async (req: Request, res: Response) => {
       const message = details.map((i) => i.message).join(",");
       return responseHandler(res, 400, message);
     }
-    const type = await addCourseType(value.name);
-    if (type) {
-      return responseHandler(res, 201, "Course type created successfully");
-    }
+    await addCourseType(value.name);
+    return responseHandler(res, 201, "Course type created successfully");
   } catch (error) {
     return responseHandler(res, 500, error.message);
   }
