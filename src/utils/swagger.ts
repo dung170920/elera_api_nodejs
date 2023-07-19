@@ -2,6 +2,7 @@ import { Express } from "express";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 import { log } from "./logger";
+import { Role } from "../shared";
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -162,13 +163,17 @@ const options: swaggerJsdoc.Options = {
             {
               name: "pageNumber",
               in: "query",
-              type: "number",
+              schema: {
+                type: "number",
+              },
               default: 1,
             },
             {
               name: "pageSize",
               in: "query",
-              type: "number",
+              schema: {
+                type: "number",
+              },
               default: 10,
             },
             {
@@ -176,7 +181,7 @@ const options: swaggerJsdoc.Options = {
               in: "query",
               schema: {
                 type: "string",
-                enum: ["user", "mentor"],
+                enum: [Role.user, Role.mentor],
               },
             },
           ],
@@ -212,7 +217,9 @@ const options: swaggerJsdoc.Options = {
             {
               name: "id",
               in: "path",
-              type: "string",
+              schema: {
+                type: "string",
+              },
             },
           ],
           responses: {
@@ -354,7 +361,9 @@ const options: swaggerJsdoc.Options = {
             {
               name: "id",
               in: "path",
-              type: "string",
+              schema: {
+                type: "string",
+              },
             },
           ],
 
@@ -392,22 +401,29 @@ const options: swaggerJsdoc.Options = {
             {
               name: "pageNumber",
               in: "query",
-              type: "number",
+              schema: {
+                type: "number",
+              },
               default: 1,
             },
             {
               name: "pageSize",
               in: "query",
-              type: "number",
+              schema: {
+                type: "number",
+              },
               default: 10,
             },
             {
-              name: "filterBy",
+              name: "isPopular",
               in: "query",
+              default: false,
               schema: {
-                type: "string",
-                enum: ["popular"],
+                type: "boolean",
+                enum: [false, true],
               },
+              nullable: false,
+              description: "True for get top 3 popular course",
             },
             {
               name: "courseTypeId",
@@ -482,7 +498,9 @@ const options: swaggerJsdoc.Options = {
             {
               name: "id",
               in: "path",
-              type: "string",
+              schema: {
+                type: "string",
+              },
             },
           ],
           responses: {
@@ -515,7 +533,9 @@ const options: swaggerJsdoc.Options = {
             {
               name: "id",
               in: "path",
-              type: "string",
+              schema: {
+                type: "string",
+              },
             },
           ],
           requestBody: {
@@ -557,7 +577,9 @@ const options: swaggerJsdoc.Options = {
             {
               name: "id",
               in: "path",
-              type: "string",
+              schema: {
+                type: "string",
+              },
             },
           ],
           responses: {
@@ -594,13 +616,17 @@ const options: swaggerJsdoc.Options = {
             {
               name: "pageNumber",
               in: "query",
-              type: "number",
+              schema: {
+                type: "number",
+              },
               default: 1,
             },
             {
               name: "pageSize",
               in: "query",
-              type: "number",
+              schema: {
+                type: "number",
+              },
               default: 10,
             },
           ],

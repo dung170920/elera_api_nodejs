@@ -1,12 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 import { currentDate, formatToJson } from "../utils";
-
-export interface IEnrollment extends Document {
-  user: mongoose.Schema.Types.ObjectId;
-  course: mongoose.Schema.Types.ObjectId;
-  createAt: Date;
-  progress: Number;
-}
+import { IEnrollment } from "../shared";
 
 const EnrollmentSchema: Schema = new mongoose.Schema(
   {

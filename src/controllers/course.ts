@@ -8,14 +8,21 @@ import {
   getTopThreeCoursesByEnrollment,
 } from "../models";
 import { Request, Response } from "express";
-import { responseHandler } from "../utils";
-import { IRequest } from "../middlewares";
+import { responseHandler, isValidObjectId } from "../utils";
+import { IRequest } from "../shared";
 
 export const getCourseList = async (req: Request, res: Response) => {
   try {
-    const { pageNumber, pageSize, courseTypeId, filterBy } = req.query;
+    const { pageNumber, pageSize, courseTypeId, isPopular } = req.query;
 
-    if (filterBy) {
+    if (isPopular) {
+      const popular = await getTopThreeCoursesByEnrollment();
+      return responseHandler(res, 200, "Get list of course successfully", {
+        data: popular,
+        pageNumber: 1,
+        pageSize: 3,
+        totalPages: 1,
+      });
     }
 
     const parsePageNumber = Number(pageNumber);
@@ -56,6 +63,10 @@ export const getCourse = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
+    if (!isValidObjectId(id)) {
+      return responseHandler(res, 400);
+    }
+
     const course = await getCourseById(id);
     if (course) {
       return responseHandler(res, 200, "Get course successfully", course);
@@ -69,6 +80,10 @@ export const getCourse = async (req: Request, res: Response) => {
 export const createCourse = async (req: IRequest, res: Response) => {
   try {
     const { courseTypeId } = req.body;
+
+    if (!isValidObjectId(courseTypeId)) {
+      return responseHandler(res, 400);
+    }
 
     const course = await addCourse({
       courseType: courseTypeId,
@@ -90,6 +105,10 @@ export const createCourse = async (req: IRequest, res: Response) => {
 export const updateCourse = async (req: IRequest, res: Response) => {
   try {
     const { id } = req.params;
+
+    if (!isValidObjectId(id)) {
+      return responseHandler(res, 400);
+    }
 
     const course = await getCourseById(id);
 
@@ -117,6 +136,10 @@ export const updateCourse = async (req: IRequest, res: Response) => {
 export const disableCourse = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    if (!isValidObjectId(id)) {
+      return responseHandler(res, 400);
+    }
 
     await deleteCourse(id);
 

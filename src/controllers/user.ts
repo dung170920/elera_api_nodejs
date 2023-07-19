@@ -3,21 +3,25 @@ import { Request, Response } from "express";
 import {
   countUsers,
   createUser,
-  getCourseById,
   getUserByEmail,
   getUserByGoogleId,
   getUserById,
   getUserList,
 } from "../models";
 import mongoose from "mongoose";
-import { delKey, responseHandler } from "../utils";
-import { IRequest } from "../interfaces";
+import {
+  delKey,
+  responseHandler,
+  loginValidation,
+  registerValidation,
+  isValidObjectId,
+} from "../utils";
+import { IRequest } from "../shared";
 import {
   signAccessToken,
   signRefreshToken,
   verifyRefreshToken,
 } from "../middlewares";
-import { loginValidation, registerValidation } from "../validation";
 import { OAuth2Client } from "google-auth-library";
 import "dotenv/config";
 
@@ -205,11 +209,14 @@ export const getUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      const user = await getUserById(id);
-      if (user) {
-        return responseHandler(res, 200, "Get user successfully", user);
-      }
+    if (!isValidObjectId(id)) {
+      return responseHandler(res, 400);
+    }
+
+    const user = await getUserById(id);
+
+    if (user) {
+      return responseHandler(res, 200, "Get user successfully", user);
     }
 
     return responseHandler(res, 404, "User not found");
@@ -218,24 +225,24 @@ export const getUser = async (req: Request, res: Response) => {
   }
 };
 
-export const saveCourse = async (req: IRequest, res: Response) => {
-  try {
-    const { courseId } = req.body;
+// export const saveCourse = async (req: IRequest, res: Response) => {
+//   try {
+//     const { courseId } = req.body;
 
-    const course = await getCourseById(courseId);
-    if (!course) {
-      return responseHandler(res, 404, "Course not found");
-    }
+//     const course = await getCourseById(courseId);
+//     if (!course) {
+//       return responseHandler(res, 404, "Course not found");
+//     }
 
-    if (req.user.enrolledCourses.includes(courseId)) {
-      return responseHandler(res, 400, "Course is enrolled");
-    }
+//     if (req.user.enrolledCourses.includes(courseId)) {
+//       return responseHandler(res, 400, "Course is enrolled");
+//     }
 
-    return responseHandler(res, 200, "Enroll in course successfully");
-  } catch (error) {
-    return responseHandler(res, 500, error.message);
-  }
-};
+//     return responseHandler(res, 200, "Enroll in course successfully");
+//   } catch (error) {
+//     return responseHandler(res, 500, error.message);
+//   }
+// };
 
 export const logout = async (req: IRequest, res: Response) => {
   try {

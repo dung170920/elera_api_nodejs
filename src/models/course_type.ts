@@ -1,10 +1,6 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { formatToJson } from "../utils";
-
-interface ICourseType extends Document {
-  name: string;
-  isDisable: boolean;
-}
+import { ICourseType } from "../shared";
 
 export const CourseTypeSchema: Schema = new mongoose.Schema(
   {

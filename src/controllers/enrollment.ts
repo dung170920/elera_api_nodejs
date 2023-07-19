@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { IRequest } from "../interfaces";
+import { IRequest } from "../shared";
 import {
   addEnrollment,
   countEnrollments,
@@ -7,11 +7,15 @@ import {
   getEnrollment,
   getEnrollments,
 } from "../models";
-import { responseHandler } from "../utils";
+import { responseHandler, isValidObjectId } from "../utils";
 
 export const enrollCourse = async (req: IRequest, res: Response) => {
   try {
     const { courseId } = req.body;
+
+    if (!isValidObjectId(courseId)) {
+      return responseHandler(res, 400);
+    }
 
     const course = await getCourseById(courseId);
     if (!course) {

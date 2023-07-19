@@ -1,19 +1,6 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { currentDate, formatToJson } from "../utils";
-
-export interface ICourse extends Document {
-  title: string;
-  description: string;
-  image: string;
-  trailer: string;
-  courseType: mongoose.Types.ObjectId;
-  mentor: mongoose.Types.ObjectId;
-  price: number;
-  isDisable: boolean;
-  rate: number;
-  createAt: Date;
-  sections: [typeof SectionSchema];
-}
+import { ICourse } from "../shared";
 
 const LessonSchema: Schema = new mongoose.Schema(
   {
@@ -35,7 +22,7 @@ const LessonSchema: Schema = new mongoose.Schema(
   }
 );
 
-const SectionSchema: Schema = new mongoose.Schema(
+export const SectionSchema: Schema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -116,9 +103,8 @@ export const getCourses = (
     .skip((pageNumber - 1) * pageSize)
     .limit(pageSize)
     .populate("courseType")
-    .populate("studentsCount")
-    .select("-sections -reviewsCount -mentor")
-    .exec();
+    .select("-sections -mentor")
+    .populate("studentsCount");
 
 export const countCourses = (courseTypeId?: string) =>
   CourseModel.countDocuments(
@@ -128,14 +114,12 @@ export const countCourses = (courseTypeId?: string) =>
   );
 
 export const getTopThreeCoursesByEnrollment = () =>
-  CourseModel.aggregate([
-    {
-      $sort: { studentsCount: -1 },
-    },
-    {
-      $limit: 3,
-    },
-  ]);
+  CourseModel.find()
+    .sort({ studentsCount: -1 })
+    .limit(3)
+    .populate("courseType")
+    .select("-sections -mentor")
+    .populate("studentsCount");
 
 export const getCourseById = (id: string) =>
   CourseModel.findOne({ _id: id })

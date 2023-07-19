@@ -1,12 +1,9 @@
-import { Response, NextFunction, Request } from "express";
+import { Response, NextFunction } from "express";
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
-import { IUser, getUserById } from "../models";
+import { getUserById } from "../models";
 import { getValue, responseHandler, setValue } from "../utils";
 import "dotenv/config";
-
-export interface IRequest extends Request {
-  user: IUser;
-}
+import { IRequest } from "../shared";
 
 const accessTokenKey = process.env.JWT_ACCESS_TOKEN_KEY || "";
 const refreshTokenKey = process.env.JWT_REFRESH_TOKEN_KEY || "";

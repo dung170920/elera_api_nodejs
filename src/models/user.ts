@@ -1,17 +1,6 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { currentDate, formatToJson } from "../utils";
-
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-  avatar: string;
-  isDisable: boolean;
-  role: string;
-  googleId: string;
-  createAt: Date;
-  enrolledCourses: mongoose.Schema.Types.ObjectId[];
-}
+import { IUser, Role } from "../shared";
 
 const UserScheme: Schema = new mongoose.Schema(
   {
@@ -23,8 +12,8 @@ const UserScheme: Schema = new mongoose.Schema(
     googleId: { type: String },
     role: {
       type: String,
-      default: "user",
-      enum: ["user", "mentor", "admin"],
+      default: Role.user,
+      enum: Role,
     },
     createAt: {
       type: Date,

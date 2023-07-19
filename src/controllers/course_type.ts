@@ -5,8 +5,7 @@ import {
   deleteCourseType,
 } from "../models";
 import { Request, Response } from "express";
-import { responseHandler } from "../utils";
-import { createCourseTypeValidation } from "../validation";
+import { responseHandler, createCourseTypeValidation } from "../utils";
 
 export const getCourseTypeList = async (req: Request, res: Response) => {
   try {
