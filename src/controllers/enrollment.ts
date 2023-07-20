@@ -4,7 +4,7 @@ import {
   addEnrollment,
   countEnrollments,
   getCourseById,
-  getEnrollment,
+  getExistingEnrollment,
   getEnrollments,
 } from "../models";
 import { responseHandler, isValidObjectId } from "../utils";
@@ -22,12 +22,14 @@ export const enrollCourse = async (req: IRequest, res: Response) => {
       return responseHandler(res, 404, "Course not found");
     }
 
-    const existingEnroll = await getEnrollment(req.user.id, course.id);
+    const existingEnroll = await getExistingEnrollment(req.user.id, course.id);
 
     if (existingEnroll) {
-      return res
-        .status(400)
-        .json({ error: "User is already enrolled in this course" });
+      return responseHandler(
+        res,
+        409,
+        "User is already enrolled in this course"
+      );
     }
 
     const enroll = await addEnrollment({
@@ -59,7 +61,7 @@ export const getEnrollmentList = async (req: IRequest, res: Response) => {
 
     const count = await countEnrollments(req.user.id);
     if (!count) {
-      return responseHandler(res, 200, "Get list of course successfully", {
+      return responseHandler(res, 200, "Get list of enrollment successfully", {
         data: [],
         pageNumber: parsePageNumber,
         pageSize: parsePageSize,
@@ -72,7 +74,7 @@ export const getEnrollmentList = async (req: IRequest, res: Response) => {
         req.user.id
       );
 
-      return responseHandler(res, 200, "Get list of course successfully", {
+      return responseHandler(res, 200, "Get list of enrollment successfully", {
         data: enrollments,
         pageNumber: parsePageNumber,
         pageSize: parsePageSize,

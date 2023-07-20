@@ -4,7 +4,7 @@ import cors from "cors";
 import * as dotenv from "dotenv";
 import { swaggerDocs, connectDB, connectToRedis } from "./utils";
 import router from "./routes";
-import { loggerMiddleware } from "./middlewares";
+import { loggerMiddleware, verifyAccessToken } from "./middlewares";
 
 dotenv.config();
 
@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 app.use(loggerMiddleware);
 
 app.use("/", router());
+
 app.get("/", (req, res) => {
   res.redirect("/swagger");
 });

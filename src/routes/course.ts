@@ -9,13 +9,15 @@ import { Router } from "express";
 import { verifyAccessToken } from "../middlewares";
 
 export default (router: Router) => {
-  router.get("/api/course", getCourseList);
+  // router.use(verifyAccessToken);
 
-  router.get("/api/course/:id", getCourse);
+  router.get("/api/course", verifyAccessToken, getCourseList);
+
+  router.get("/api/course/:id", verifyAccessToken, getCourse);
 
   router.post("/api/course", verifyAccessToken, createCourse);
 
-  router.patch("/api/course/:id", updateCourse);
+  router.patch("/api/course/:id", verifyAccessToken, updateCourse);
 
-  router.delete("/api/course/:id", disableCourse);
+  router.delete("/api/course/:id", verifyAccessToken, disableCourse);
 };

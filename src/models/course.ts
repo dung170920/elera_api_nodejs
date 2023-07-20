@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { currentDate, formatToJson } from "../utils";
 import { ICourse } from "../shared";
+import { getExistingBookMark } from ".";
 
 const LessonSchema: Schema = new mongoose.Schema(
   {
@@ -72,6 +73,19 @@ CourseSchema.virtual("studentsCount", {
   count: true,
 });
 
+CourseSchema.virtual("isBookmarked", {
+  ref: "BookMark",
+  localField: "_id",
+  foreignField: "course",
+}).get(function () {
+  console.log(this.options?.userId);
+
+  if (!this.options?.userId) return false;
+  return getExistingBookMark(this.options.userId, this.id).then(
+    (bookmark) => !!bookmark
+  );
+});
+
 SectionSchema.virtual("totalDuration").get(function () {
   let totalDuration = 0;
   if (this.lessons && this.lessons.length) {
@@ -92,7 +106,8 @@ const CourseModel = mongoose.model<ICourse>("Course", CourseSchema);
 export const getCourses = (
   pageNumber: number,
   pageSize: number,
-  courseTypeId?: string
+  courseTypeId?: string,
+  userId?: string
 ) =>
   CourseModel.find(
     courseTypeId
@@ -104,7 +119,8 @@ export const getCourses = (
     .limit(pageSize)
     .populate("courseType")
     .select("-sections -mentor")
-    .populate("studentsCount");
+    .populate("studentsCount")
+    .populate("isBookmarked");
 
 export const countCourses = (courseTypeId?: string) =>
   CourseModel.countDocuments(

@@ -11,7 +11,9 @@ import { Request, Response } from "express";
 import { responseHandler, isValidObjectId } from "../utils";
 import { IRequest } from "../shared";
 
-export const getCourseList = async (req: Request, res: Response) => {
+export const getCourseList = async (req: IRequest, res: Response) => {
+  console.log(req.user?.id);
+
   try {
     const { pageNumber, pageSize, courseTypeId, isPopular } = req.query;
 
@@ -45,7 +47,8 @@ export const getCourseList = async (req: Request, res: Response) => {
     const courses = await getCourses(
       parsePageNumber,
       parsePageSize,
-      courseTypeId?.toString()
+      courseTypeId?.toString(),
+      req.user.id
     );
 
     return responseHandler(res, 200, "Get list of course successfully", {

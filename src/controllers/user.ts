@@ -225,25 +225,6 @@ export const getUser = async (req: Request, res: Response) => {
   }
 };
 
-// export const saveCourse = async (req: IRequest, res: Response) => {
-//   try {
-//     const { courseId } = req.body;
-
-//     const course = await getCourseById(courseId);
-//     if (!course) {
-//       return responseHandler(res, 404, "Course not found");
-//     }
-
-//     if (req.user.enrolledCourses.includes(courseId)) {
-//       return responseHandler(res, 400, "Course is enrolled");
-//     }
-
-//     return responseHandler(res, 200, "Enroll in course successfully");
-//   } catch (error) {
-//     return responseHandler(res, 500, error.message);
-//   }
-// };
-
 export const logout = async (req: IRequest, res: Response) => {
   try {
     await delKey(req.user.id);

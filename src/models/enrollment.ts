@@ -47,7 +47,7 @@ export const getEnrollments = (
 export const countEnrollments = (userId: string) =>
   EnrollmentModel.countDocuments({ user: userId });
 
-export const getEnrollment = (userId: string, courseId: string) =>
+export const getExistingEnrollment = (userId: string, courseId: string) =>
   EnrollmentModel.findOne({
     user: userId,
     course: courseId,

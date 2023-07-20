@@ -90,6 +90,43 @@ const options: swaggerJsdoc.Options = {
           },
         },
       },
+      "/api/user/google-login": {
+        post: {
+          tags: ["User"],
+          summary: "Login with google account",
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/UserGoogleLoginRequest",
+                },
+              },
+            },
+          },
+          responses: {
+            200: {
+              description: "Success",
+              content: {
+                "text/plain": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "text/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       "/api/user/refresh-token": {
         post: {
           tags: ["User"],
@@ -689,6 +726,124 @@ const options: swaggerJsdoc.Options = {
           },
         },
       },
+
+      //BookMark
+      "/api/bookmark": {
+        get: {
+          tags: ["Bookmark"],
+          summary: "Get list of bookmark for user",
+          parameters: [
+            {
+              name: "pageNumber",
+              in: "query",
+              schema: {
+                type: "number",
+              },
+              default: 1,
+            },
+            {
+              name: "pageSize",
+              in: "query",
+              schema: {
+                type: "number",
+              },
+              default: 10,
+            },
+          ],
+          responses: {
+            200: {
+              description: "Success",
+              content: {
+                "text/plain": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "text/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
+        post: {
+          tags: ["Bookmark"],
+          summary: "Add course to bookmark",
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/BookmarkRequest",
+                },
+              },
+            },
+          },
+          responses: {
+            200: {
+              description: "Success",
+              content: {
+                "text/plain": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "text/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
+        delete: {
+          tags: ["Bookmark"],
+          summary: "Remove course from bookmark",
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/BookmarkRequest",
+                },
+              },
+            },
+          },
+          responses: {
+            200: {
+              description: "Success",
+              content: {
+                "text/plain": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "text/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
     components: {
       schemas: {
@@ -814,6 +969,14 @@ const options: swaggerJsdoc.Options = {
           },
         },
         EnrollmentRequest: {
+          type: "object",
+          properties: {
+            courseId: {
+              type: "string",
+            },
+          },
+        },
+        BookmarkRequest: {
           type: "object",
           properties: {
             courseId: {
