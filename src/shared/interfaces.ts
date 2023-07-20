@@ -19,6 +19,7 @@ export interface ICourse extends Document {
   isDisable: boolean;
   rate: number;
   createAt: Date;
+  courseDuration: number;
   sections: [typeof SectionSchema];
   isBookmarked: boolean;
 }
@@ -28,6 +29,7 @@ export interface IEnrollment extends Document {
   course: Types.ObjectId;
   createAt: Date;
   progress: Number;
+  nextLessonIndex: Number;
 }
 
 export interface IBookMark extends Document {

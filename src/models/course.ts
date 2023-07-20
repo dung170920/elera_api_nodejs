@@ -86,7 +86,7 @@ CourseSchema.virtual("isBookmarked", {
   );
 });
 
-SectionSchema.virtual("totalDuration").get(function () {
+SectionSchema.virtual("sectionDuration").get(function () {
   let totalDuration = 0;
   if (this.lessons && this.lessons.length) {
     for (const lesson of this.lessons) {
@@ -99,6 +99,17 @@ SectionSchema.virtual("totalDuration").get(function () {
 
 SectionSchema.virtual("totalLesson").get(function () {
   return this.lessons.length;
+});
+
+CourseSchema.virtual("courseDuration").get(function () {
+  let totalDuration = 0;
+  if (this.sections && this.sections.length) {
+    for (const sections of this.sections) {
+      totalDuration += sections.sectionDuration;
+    }
+  }
+
+  return totalDuration;
 });
 
 const CourseModel = mongoose.model<ICourse>("Course", CourseSchema);
@@ -118,9 +129,14 @@ export const getCourses = (
     .skip((pageNumber - 1) * pageSize)
     .limit(pageSize)
     .populate("courseType")
-    .select("-sections -mentor")
+    .select("-sections -mentor - courseDuration")
     .populate("studentsCount")
-    .populate("isBookmarked");
+    .populate({
+      path: "isBookmarked",
+      options: {
+        userId,
+      },
+    });
 
 export const countCourses = (courseTypeId?: string) =>
   CourseModel.countDocuments(
@@ -129,19 +145,31 @@ export const countCourses = (courseTypeId?: string) =>
       : { isDisable: false }
   );
 
-export const getTopThreeCoursesByEnrollment = () =>
+export const getTopThreeCoursesByEnrollment = (userId?: string) =>
   CourseModel.find()
     .sort({ studentsCount: -1 })
     .limit(3)
     .populate("courseType")
     .select("-sections -mentor")
-    .populate("studentsCount");
+    .populate("studentsCount")
+    .populate({
+      path: "isBookmarked",
+      options: {
+        userId,
+      },
+    });
 
-export const getCourseById = (id: string) =>
+export const getCourseById = (id: string, userId?: string) =>
   CourseModel.findOne({ _id: id })
     .populate("courseType")
     .populate("mentor", "-password -role")
-    .populate("studentsCount");
+    .populate("studentsCount")
+    .populate({
+      path: "isBookmarked",
+      options: {
+        userId,
+      },
+    });
 
 export const addCourse = (values: Record<string, any>) =>
   new CourseModel(values).save();

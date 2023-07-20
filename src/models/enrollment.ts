@@ -22,6 +22,10 @@ const EnrollmentSchema: Schema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    nextLessonIndex: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     toJSON: formatToJson,
@@ -55,3 +59,8 @@ export const getExistingEnrollment = (userId: string, courseId: string) =>
 
 export const addEnrollment = (values: Record<string, any>) =>
   new EnrollmentModel(values).save();
+
+export const updateEnrollment = (id: string, values: Record<string, any>) =>
+  EnrollmentModel.findByIdAndUpdate(id, values, {
+    new: true,
+  }).exec();

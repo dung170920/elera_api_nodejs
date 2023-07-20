@@ -725,6 +725,48 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
+        patch: {
+          tags: ["Enrollment"],
+          summary: "Update progress of enrollment",
+          parameters: [
+            {
+              name: "courseId",
+              in: "query",
+              schema: {
+                type: "string",
+              },
+            },
+            {
+              name: "lessonId",
+              in: "query",
+              schema: {
+                type: "string",
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Success",
+              content: {
+                "text/plain": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "text/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
       },
 
       //BookMark

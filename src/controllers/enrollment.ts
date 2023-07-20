@@ -1,3 +1,4 @@
+import { SectionSchema } from "./../models/course";
 import { Response } from "express";
 import { IRequest } from "../shared";
 import {
@@ -6,6 +7,7 @@ import {
   getCourseById,
   getExistingEnrollment,
   getEnrollments,
+  updateEnrollment,
 } from "../models";
 import { responseHandler, isValidObjectId } from "../utils";
 
@@ -42,6 +44,63 @@ export const enrollCourse = async (req: IRequest, res: Response) => {
       200,
       "Enroll in course successfully",
       enroll.toJSON()
+    );
+  } catch (error) {
+    return responseHandler(res, 500, error.message);
+  }
+};
+
+export const updateProgress = async (req: IRequest, res: Response) => {
+  try {
+    const { courseId, lessonId } = req.query;
+
+    if (!isValidObjectId(courseId.toString())) {
+      return responseHandler(res, 400);
+    }
+
+    const existingEnroll = await getExistingEnrollment(
+      req.user.id,
+      courseId.toString()
+    );
+
+    if (!existingEnroll) {
+      return responseHandler(res, 404, "User is not enrolled in this course");
+    }
+
+    const course = await getCourseById(courseId.toString());
+
+    const lesson = course.sections
+      .flatMap((section: any) => section.lessons)
+      .find((item) => item._id.toString() === lessonId);
+    const lessonIndex = course.sections
+      .flatMap((section: any) => section.lessons)
+      .findIndex((item) => item._id.toString() === lessonId);
+
+    if (!lesson) {
+      return responseHandler(res, 404, "Lesson not found");
+    }
+
+    if (lessonIndex < Number(existingEnroll.nextLessonIndex)) {
+      return responseHandler(res, 409, "Lesson is already viewed");
+    }
+
+    existingEnroll.progress =
+      Number(existingEnroll.progress) +
+      (lesson.duration / course.courseDuration) * 100;
+
+    existingEnroll.nextLessonIndex = lessonIndex + 1;
+
+    if (Number(existingEnroll.progress) > 100) {
+      existingEnroll.progress = 100;
+    }
+
+    const updated = await updateEnrollment(existingEnroll._id, existingEnroll);
+
+    return responseHandler(
+      res,
+      200,
+      "Lesson progress updated successfully",
+      updated
     );
   } catch (error) {
     return responseHandler(res, 500, error.message);
