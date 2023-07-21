@@ -1,3 +1,4 @@
+import { EnrollmentStatus } from "./../shared/enums";
 import mongoose, { Schema, Document } from "mongoose";
 import { currentDate, formatToJson } from "../utils";
 import { IEnrollment } from "../shared";
@@ -25,6 +26,11 @@ const EnrollmentSchema: Schema = new mongoose.Schema(
     nextLessonIndex: {
       type: Number,
       default: 0,
+    },
+    status: {
+      type: Number,
+      default: EnrollmentStatus.ongoing,
+      enum: EnrollmentStatus,
     },
   },
   {

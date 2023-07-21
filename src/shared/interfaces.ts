@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { Document, Types } from "mongoose";
 import { SectionSchema } from "../models";
-import { Role } from "./enums";
+import { EnrollmentStatus, Role } from "./enums";
 
 export interface ICourseType extends Document {
   name: string;
@@ -17,19 +17,21 @@ export interface ICourse extends Document {
   mentor: Types.ObjectId;
   price: number;
   isDisable: boolean;
-  rate: number;
+  rating: number;
   createAt: Date;
   courseDuration: number;
   sections: [typeof SectionSchema];
   isBookmarked: boolean;
+  reviews: [Types.ObjectId];
 }
 
 export interface IEnrollment extends Document {
   user: Types.ObjectId;
   course: Types.ObjectId;
   createAt: Date;
-  progress: Number;
-  nextLessonIndex: Number;
+  progress: number;
+  nextLessonIndex: number;
+  status: EnrollmentStatus;
 }
 
 export interface IBookMark extends Document {
@@ -50,4 +52,12 @@ export interface IUser extends Document {
 
 export interface IRequest extends Request {
   user: IUser;
+}
+
+export interface IReview extends Document {
+  user: Types.ObjectId;
+  course: Types.ObjectId;
+  createAt: Date;
+  rating: number;
+  comment: string;
 }

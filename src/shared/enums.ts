@@ -3,3 +3,8 @@ export enum Role {
   mentor = "mentor",
   user = "user",
 }
+
+export enum EnrollmentStatus {
+  ongoing,
+  completed,
+}

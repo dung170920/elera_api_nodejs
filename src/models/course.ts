@@ -44,22 +44,28 @@ const CourseSchema: Schema = new mongoose.Schema(
     trailer: { type: String, required: false },
     price: { type: Number, required: true },
     mentor: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     courseType: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "CourseType",
       required: true,
     },
-    rate: { type: Number, default: 0 },
+    rating: { type: Number, default: 0 },
     isDisable: { type: Boolean, default: false },
     createAt: {
       type: Date,
       default: currentDate(),
     },
     sections: [SectionSchema],
+    reviews: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
   },
   {
     toJSON: formatToJson,

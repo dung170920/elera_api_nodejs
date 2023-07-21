@@ -1,6 +1,6 @@
 import { SectionSchema } from "./../models/course";
 import { Response } from "express";
-import { IRequest } from "../shared";
+import { EnrollmentStatus, IRequest } from "../shared";
 import {
   addEnrollment,
   countEnrollments,
@@ -90,8 +90,9 @@ export const updateProgress = async (req: IRequest, res: Response) => {
 
     existingEnroll.nextLessonIndex = lessonIndex + 1;
 
-    if (Number(existingEnroll.progress) > 100) {
+    if (Number(existingEnroll.progress) >= 100) {
       existingEnroll.progress = 100;
+      existingEnroll.status = EnrollmentStatus.completed;
     }
 
     const updated = await updateEnrollment(existingEnroll._id, existingEnroll);

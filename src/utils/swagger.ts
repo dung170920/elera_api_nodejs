@@ -24,7 +24,7 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/UserRegisterRequest",
+                  $ref: "#/components/schemas/UserRegister",
                 },
               },
             },
@@ -61,7 +61,7 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/UserLoginRequest",
+                  $ref: "#/components/schemas/UserLogin",
                 },
               },
             },
@@ -98,7 +98,7 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/UserGoogleLoginRequest",
+                  $ref: "#/components/schemas/UserGoogleLogin",
                 },
               },
             },
@@ -135,7 +135,7 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/UserRefreshTokenRequest",
+                  $ref: "#/components/schemas/UserRefreshToken",
                 },
               },
             },
@@ -319,7 +319,7 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/CourseTypeRequest",
+                  $ref: "#/components/schemas/CourseType",
                 },
               },
             },
@@ -363,7 +363,7 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/CourseTypeRequest",
+                  $ref: "#/components/schemas/CourseType",
                 },
               },
             },
@@ -498,7 +498,7 @@ const options: swaggerJsdoc.Options = {
             content: {
               "multipart/form-data": {
                 schema: {
-                  $ref: "#/components/schemas/CourseRequest",
+                  $ref: "#/components/schemas/Course",
                 },
               },
             },
@@ -579,7 +579,7 @@ const options: swaggerJsdoc.Options = {
             content: {
               "multipart/form-data": {
                 schema: {
-                  $ref: "#/components/schemas/CourseRequest",
+                  $ref: "#/components/schemas/Course",
                 },
               },
             },
@@ -697,7 +697,7 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/EnrollmentRequest",
+                  $ref: "#/components/schemas/Enrollment",
                 },
               },
             },
@@ -822,7 +822,7 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/BookmarkRequest",
+                  $ref: "#/components/schemas/Bookmark",
                 },
               },
             },
@@ -857,7 +857,54 @@ const options: swaggerJsdoc.Options = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/BookmarkRequest",
+                  $ref: "#/components/schemas/Bookmark",
+                },
+              },
+            },
+          },
+          responses: {
+            200: {
+              description: "Success",
+              content: {
+                "text/plain": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "application/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+                "text/json": {
+                  schema: {
+                    $ref: "#/components/schemas/APIResponse",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+
+      //Review
+      "/api/review/{courseId}": {
+        post: {
+          tags: ["Review"],
+          summary: "Add review to course",
+          parameters: [
+            {
+              name: "courseId",
+              in: "path",
+              type: "string",
+              required: true,
+            },
+          ],
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Review",
                 },
               },
             },
@@ -899,7 +946,7 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
-        UserRegisterRequest: {
+        UserRegister: {
           type: "object",
           properties: {
             name: {
@@ -917,7 +964,7 @@ const options: swaggerJsdoc.Options = {
           },
           xml: { name: "User" },
         },
-        UserLoginRequest: {
+        UserLogin: {
           type: "object",
           properties: {
             email: {
@@ -928,7 +975,7 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
-        UserGoogleLoginRequest: {
+        UserGoogleLogin: {
           type: "object",
           properties: {
             idToken: {
@@ -936,7 +983,7 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
-        UserRefreshTokenRequest: {
+        UserRefreshToken: {
           type: "object",
           properties: {
             refreshToken: {
@@ -944,7 +991,7 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
-        CourseTypeRequest: {
+        CourseType: {
           type: "object",
           properties: {
             name: {
@@ -983,7 +1030,7 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
-        CourseRequest: {
+        Course: {
           type: "object",
           properties: {
             title: {
@@ -1010,7 +1057,7 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
-        EnrollmentRequest: {
+        Enrollment: {
           type: "object",
           properties: {
             courseId: {
@@ -1018,10 +1065,23 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
-        BookmarkRequest: {
+        Bookmark: {
           type: "object",
           properties: {
             courseId: {
+              type: "string",
+            },
+          },
+        },
+        Review: {
+          type: "object",
+          properties: {
+            rating: {
+              type: "integer",
+              format: "int32",
+              enum: [1, 2, 3, 4, 5],
+            },
+            comment: {
               type: "string",
             },
           },
