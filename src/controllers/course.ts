@@ -5,8 +5,6 @@ import {
   editCourse,
   deleteCourse,
   countCourses,
-  getTopThreeCoursesByEnrollment,
-  getExistingBookMark,
 } from "../models";
 import { Response } from "express";
 import { responseHandler, isValidObjectId } from "../utils";
@@ -16,15 +14,15 @@ export const getCourseList = async (req: IRequest, res: Response) => {
   try {
     const { pageNumber, pageSize, courseTypeId, isPopular } = req.query;
 
-    if (isPopular) {
-      const popular = await getTopThreeCoursesByEnrollment(req.user.id);
-      return responseHandler(res, 200, "Get list of course successfully", {
-        data: popular,
-        pageNumber: 1,
-        pageSize: 3,
-        totalPages: 1,
-      });
-    }
+    // if (isPopular) {
+    //   const popular = await getTopThreeCoursesByEnrollment(req.user.id);
+    //   return responseHandler(res, 200, "Get list of course successfully", {
+    //     data: popular,
+    //     pageNumber: 1,
+    //     pageSize: 3,
+    //     totalPages: 1,
+    //   });
+    // }
 
     const parsePageNumber = Number(pageNumber);
     const parsePageSize = Number(pageSize);
@@ -46,6 +44,7 @@ export const getCourseList = async (req: IRequest, res: Response) => {
     const courses = await getCourses(
       parsePageNumber,
       parsePageSize,
+      !!isPopular,
       courseTypeId?.toString(),
       req.user.id
     );

@@ -113,17 +113,30 @@ const CourseModel = mongoose.model<ICourse>("Course", CourseSchema);
 export const getCourses = (
   pageNumber: number,
   pageSize: number,
+  isPopular: boolean,
   courseTypeId?: string,
   userId?: string
 ) =>
+  // isPopular
+  //   ? CourseModel.find({ isDisable: false })
+  //       .sort({ studentsCount: -1 })
+  //       .limit(3)
+  //       .populate("courseType")
+  //       .select("-sections -mentor")
+  //       .populate("studentsCount")
+  //       .populate({
+  //         path: "isBookmarked",
+  //         match: { user: userId },
+  //       })
+  //   :
   CourseModel.find(
-    courseTypeId
-      ? { isDisable: false, courseType: courseTypeId }
+    isPopular
+      ? courseTypeId && { isDisable: false, courseType: courseTypeId }
       : { isDisable: false }
   )
     .sort({ _id: -1 })
-    .skip((pageNumber - 1) * pageSize)
-    .limit(pageSize)
+    .skip(isPopular && (pageNumber - 1) * pageSize)
+    .limit(isPopular ? 3 : pageSize)
     .populate("courseType")
     .select("-sections -mentor -courseDuration")
     .populate("studentsCount")
@@ -138,18 +151,6 @@ export const countCourses = (courseTypeId?: string) =>
       ? { isDisable: false, courseType: courseTypeId }
       : { isDisable: false }
   );
-
-export const getTopThreeCoursesByEnrollment = (userId?: string) =>
-  CourseModel.find()
-    .sort({ studentsCount: -1 })
-    .limit(3)
-    .populate("courseType")
-    .select("-sections -mentor")
-    .populate("studentsCount")
-    .populate({
-      path: "isBookmarked",
-      match: { user: userId },
-    });
 
 export const getCourseById = (id: string, userId?: string) =>
   CourseModel.findOne({ _id: id })
