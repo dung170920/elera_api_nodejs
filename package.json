@@ -4,7 +4,6 @@
   "engines": {
     "node": ">=14.20.1"
   },
-  "type": "module",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
