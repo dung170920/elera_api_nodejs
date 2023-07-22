@@ -4,6 +4,7 @@ import course from "./course";
 import user from "./user";
 import enrollment from "./enrollment";
 import review from "./review";
+import bookmark from "./bookmark";
 
 const router = Router();
 
@@ -12,6 +13,7 @@ export default (): Router => {
   course_type(router);
   user(router);
   enrollment(router);
+  bookmark(router);
   review(router);
 
   return router;

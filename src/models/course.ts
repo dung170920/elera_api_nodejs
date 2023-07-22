@@ -1,7 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { currentDate, formatToJson } from "../utils";
 import { ICourse } from "../shared";
-import { getExistingBookMark } from ".";
 
 const LessonSchema: Schema = new mongoose.Schema(
   {
@@ -60,12 +59,6 @@ const CourseSchema: Schema = new mongoose.Schema(
       default: currentDate(),
     },
     sections: [SectionSchema],
-    reviews: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Review",
-      },
-    ],
   },
   {
     toJSON: formatToJson,
@@ -83,13 +76,10 @@ CourseSchema.virtual("isBookmarked", {
   ref: "BookMark",
   localField: "_id",
   foreignField: "course",
-}).get(function () {
-  console.log(this.options?.userId);
-
-  if (!this.options?.userId) return false;
-  return getExistingBookMark(this.options.userId, this.id).then(
-    (bookmark) => !!bookmark
-  );
+  justOne: true,
+  get: function (virtual) {
+    return !!virtual;
+  },
 });
 
 SectionSchema.virtual("sectionDuration").get(function () {
@@ -135,13 +125,11 @@ export const getCourses = (
     .skip((pageNumber - 1) * pageSize)
     .limit(pageSize)
     .populate("courseType")
-    .select("-sections -mentor - courseDuration")
+    .select("-sections -mentor -courseDuration")
     .populate("studentsCount")
     .populate({
       path: "isBookmarked",
-      options: {
-        userId,
-      },
+      match: { user: userId },
     });
 
 export const countCourses = (courseTypeId?: string) =>
@@ -160,9 +148,7 @@ export const getTopThreeCoursesByEnrollment = (userId?: string) =>
     .populate("studentsCount")
     .populate({
       path: "isBookmarked",
-      options: {
-        userId,
-      },
+      match: { user: userId },
     });
 
 export const getCourseById = (id: string, userId?: string) =>
@@ -172,9 +158,7 @@ export const getCourseById = (id: string, userId?: string) =>
     .populate("studentsCount")
     .populate({
       path: "isBookmarked",
-      options: {
-        userId,
-      },
+      match: { user: userId },
     });
 
 export const addCourse = (values: Record<string, any>) =>

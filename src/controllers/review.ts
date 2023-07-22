@@ -7,6 +7,7 @@ import {
   editCourse,
   getExistingReview,
   getExistingEnrollment,
+  getReviewsByCourseId,
 } from "../models";
 import { EnrollmentStatus, IRequest } from "../shared";
 
@@ -42,15 +43,14 @@ export const addCourseReview = async (req: IRequest, res: Response) => {
       comment,
     });
 
-    course.reviews.push(review._id);
-
     let totalRating = 0;
-    for (const reviewId of course.reviews) {
+    const reviews = await getReviewsByCourseId(courseId);
+    for (const reviewId of reviews) {
       const review = await getReviewById(reviewId.toString());
       totalRating += Number(review ? review.rating : 0);
     }
 
-    course.rating = totalRating / course.reviews.length;
+    course.rating = totalRating / reviews.length;
 
     await editCourse(courseId, course);
 

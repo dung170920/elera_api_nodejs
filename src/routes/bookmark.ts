@@ -7,9 +7,13 @@ import {
 } from "../controllers";
 
 export default (router: Router) => {
-  router.post("/api/bookmark", verifyAccessToken, addToBookMark);
+  router.post("/api/bookmark/:courseId", verifyAccessToken, addToBookMark);
 
-  router.delete("/api/bookmark", verifyAccessToken, removeFromBookMark);
+  router.delete(
+    "/api/bookmark/:courseId",
+    verifyAccessToken,
+    removeFromBookMark
+  );
 
   router.get("/api/bookmark", verifyAccessToken, getBookMarkList);
 };

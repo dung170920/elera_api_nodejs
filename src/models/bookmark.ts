@@ -30,8 +30,7 @@ export const getBookMarks = (
   BookMarkModel.find({ user: userId })
     .sort({ _id: -1 })
     .skip((pageNumber - 1) * pageSize)
-    .limit(pageSize)
-    .exec();
+    .limit(pageSize);
 
 export const countBookMark = (userId: string) =>
   BookMarkModel.countDocuments({ user: userId });

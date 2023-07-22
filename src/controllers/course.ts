@@ -6,8 +6,9 @@ import {
   deleteCourse,
   countCourses,
   getTopThreeCoursesByEnrollment,
+  getExistingBookMark,
 } from "../models";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { responseHandler, isValidObjectId } from "../utils";
 import { IRequest } from "../shared";
 
@@ -16,7 +17,7 @@ export const getCourseList = async (req: IRequest, res: Response) => {
     const { pageNumber, pageSize, courseTypeId, isPopular } = req.query;
 
     if (isPopular) {
-      const popular = await getTopThreeCoursesByEnrollment();
+      const popular = await getTopThreeCoursesByEnrollment(req.user.id);
       return responseHandler(res, 200, "Get list of course successfully", {
         data: popular,
         pageNumber: 1,
@@ -60,7 +61,7 @@ export const getCourseList = async (req: IRequest, res: Response) => {
   }
 };
 
-export const getCourse = async (req: Request, res: Response) => {
+export const getCourse = async (req: IRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -68,7 +69,8 @@ export const getCourse = async (req: Request, res: Response) => {
       return responseHandler(res, 400);
     }
 
-    const course = await getCourseById(id);
+    const course = await getCourseById(id, req.user.id);
+
     if (course) {
       return responseHandler(res, 200, "Get course successfully", course);
     }
@@ -134,7 +136,7 @@ export const updateCourse = async (req: IRequest, res: Response) => {
   }
 };
 
-export const disableCourse = async (req: Request, res: Response) => {
+export const disableCourse = async (req: IRequest, res: Response) => {
   try {
     const { id } = req.params;
 

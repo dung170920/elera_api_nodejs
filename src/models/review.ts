@@ -46,3 +46,6 @@ export const getExistingReview = (userId: string, courseId: string) =>
     user: userId,
     course: courseId,
   });
+
+export const getReviewsByCourseId = (id: string) =>
+  ReviewModel.find({ course: id });

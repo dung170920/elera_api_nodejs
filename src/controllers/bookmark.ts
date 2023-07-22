@@ -12,7 +12,7 @@ import {
 
 export const addToBookMark = async (req: IRequest, res: Response) => {
   try {
-    const { courseId } = req.body;
+    const { courseId } = req.params;
 
     if (!isValidObjectId(courseId)) {
       return responseHandler(res, 400);
@@ -45,6 +45,8 @@ export const addToBookMark = async (req: IRequest, res: Response) => {
 };
 
 export const getBookMarkList = async (req: IRequest, res: Response) => {
+  console.log(req.user.id);
+
   try {
     const { pageNumber, pageSize } = req.query;
 
@@ -84,7 +86,7 @@ export const getBookMarkList = async (req: IRequest, res: Response) => {
 
 export const removeFromBookMark = async (req: IRequest, res: Response) => {
   try {
-    const { courseId } = req.body;
+    const { courseId } = req.params;
 
     if (!isValidObjectId(courseId)) {
       return responseHandler(res, 400);

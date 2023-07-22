@@ -9,8 +9,6 @@ import { Router } from "express";
 import { verifyAccessToken } from "../middlewares";
 
 export default (router: Router) => {
-  // router.use(verifyAccessToken);
-
   router.get("/api/course", verifyAccessToken, getCourseList);
 
   router.get("/api/course/:id", verifyAccessToken, getCourse);

@@ -815,18 +815,19 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
+      },
+      "/api/bookmark/{courseId}": {
         post: {
           tags: ["Bookmark"],
           summary: "Add course to bookmark",
-          requestBody: {
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Bookmark",
-                },
-              },
+          parameters: [
+            {
+              name: "courseId",
+              in: "path",
+              type: "string",
+              required: true,
             },
-          },
+          ],
           responses: {
             200: {
               description: "Success",
@@ -853,15 +854,14 @@ const options: swaggerJsdoc.Options = {
         delete: {
           tags: ["Bookmark"],
           summary: "Remove course from bookmark",
-          requestBody: {
-            content: {
-              "application/json": {
-                schema: {
-                  $ref: "#/components/schemas/Bookmark",
-                },
-              },
+          parameters: [
+            {
+              name: "courseId",
+              in: "path",
+              type: "string",
+              required: true,
             },
-          },
+          ],
           responses: {
             200: {
               description: "Success",
@@ -1058,14 +1058,6 @@ const options: swaggerJsdoc.Options = {
           },
         },
         Enrollment: {
-          type: "object",
-          properties: {
-            courseId: {
-              type: "string",
-            },
-          },
-        },
-        Bookmark: {
           type: "object",
           properties: {
             courseId: {

@@ -41,12 +41,12 @@ export const verifyAccessToken = async (
     const token = req?.headers?.authorization?.split("Bearer ")[1] ?? "";
 
     const payload = jwt.verify(token, accessTokenKey) as JwtPayload;
-    console.log("payload :", payload);
 
     if (payload) {
       const user = await getUserById(payload.aud.toString());
       if (user) {
         req.user = user.toJSON();
+
         next();
       } else {
         return responseHandler(res, 401);

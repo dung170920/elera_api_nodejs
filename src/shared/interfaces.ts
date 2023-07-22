@@ -22,7 +22,6 @@ export interface ICourse extends Document {
   courseDuration: number;
   sections: [typeof SectionSchema];
   isBookmarked: boolean;
-  reviews: [Types.ObjectId];
 }
 
 export interface IEnrollment extends Document {
