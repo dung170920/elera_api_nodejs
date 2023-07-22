@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "outDir": "./dist",
+    "module": "CommonJS",
+    "outDir": "dist",
     "sourceMap": false,
     "declaration": true,
     "lib": ["ES2017.Object", "ES2015", "ES2017", "DOM"],
