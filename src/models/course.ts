@@ -117,18 +117,6 @@ export const getCourses = (
   courseTypeId?: string,
   userId?: string
 ) =>
-  // isPopular
-  //   ? CourseModel.find({ isDisable: false })
-  //       .sort({ studentsCount: -1 })
-  //       .limit(3)
-  //       .populate("courseType")
-  //       .select("-sections -mentor")
-  //       .populate("studentsCount")
-  //       .populate({
-  //         path: "isBookmarked",
-  //         match: { user: userId },
-  //       })
-  //   :
   CourseModel.find(
     isPopular
       ? courseTypeId && { isDisable: false, courseType: courseTypeId }

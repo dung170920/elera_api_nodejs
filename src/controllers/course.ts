@@ -27,10 +27,6 @@ export const getCourseList = async (req: IRequest, res: Response) => {
     const parsePageNumber = Number(pageNumber) ?? 1;
     const parsePageSize = Number(pageSize) ?? 10;
 
-    // if (isNaN(parsePageNumber) || isNaN(parsePageSize)) {
-    //   return responseHandler(res, 400, "Invalid page number and page size");
-    // }
-
     const count = await countCourses(courseTypeId?.toString());
     if (!count) {
       return responseHandler(res, 200, "Get list of course successfully", {
@@ -53,7 +49,7 @@ export const getCourseList = async (req: IRequest, res: Response) => {
       data: courses,
       pageNumber: parsePageNumber,
       pageSize: parsePageSize,
-      totalPages: Math.ceil(count / parsePageSize),
+      totalPages: isPopular ? 1 : Math.ceil(count / parsePageSize),
     });
   } catch (error) {
     return responseHandler(res, 500, error.message);
