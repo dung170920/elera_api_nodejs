@@ -24,12 +24,12 @@ export const getCourseList = async (req: IRequest, res: Response) => {
     //   });
     // }
 
-    const parsePageNumber = Number(pageNumber);
-    const parsePageSize = Number(pageSize);
+    const parsePageNumber = Number(pageNumber) ?? 1;
+    const parsePageSize = Number(pageSize) ?? 10;
 
-    if (isNaN(parsePageNumber) || isNaN(parsePageSize)) {
-      return responseHandler(res, 400, "Invalid page number and page size");
-    }
+    // if (isNaN(parsePageNumber) || isNaN(parsePageSize)) {
+    //   return responseHandler(res, 400, "Invalid page number and page size");
+    // }
 
     const count = await countCourses(courseTypeId?.toString());
     if (!count) {
