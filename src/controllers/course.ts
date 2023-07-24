@@ -28,14 +28,6 @@ export const getCourseList = async (req: IRequest, res: Response) => {
     const parsePageSize = Number(pageSize) ?? 10;
 
     const count = await countCourses(courseTypeId?.toString());
-    if (!count) {
-      return responseHandler(res, 200, "Get list of course successfully", {
-        data: [],
-        pageNumber: parsePageNumber,
-        pageSize: parsePageSize,
-        totalPages: 0,
-      });
-    }
 
     const courses = await getCourses(
       parsePageNumber,
@@ -47,8 +39,8 @@ export const getCourseList = async (req: IRequest, res: Response) => {
 
     return responseHandler(res, 200, "Get list of course successfully", {
       data: courses,
-      pageNumber: parsePageNumber,
-      pageSize: parsePageSize,
+      pageNumber: isPopular ? 1 : parsePageNumber,
+      pageSize: isPopular ? 3 : parsePageSize,
       totalPages: isPopular ? 1 : Math.ceil(count / parsePageSize),
     });
   } catch (error) {
