@@ -9,7 +9,7 @@ const UserScheme: Schema = new mongoose.Schema(
     avatar: { type: String, required: false },
     isDisable: { type: Boolean, default: false },
     password: { type: String },
-    googleId: { type: String },
+    googleId: { type: String, unique: true },
     role: {
       type: String,
       default: Role.user,

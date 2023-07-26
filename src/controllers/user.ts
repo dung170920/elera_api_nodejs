@@ -74,16 +74,15 @@ export const googleLogin = async (req: Request, res: Response) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    console.log("decoded: ", decoded.getPayload());
-
-    const user = await getUserByGoogleId(decoded.getUserId());
+    const payload = decoded.getPayload();
+    const user = await getUserByGoogleId(payload.sub);
 
     if (!user) {
-      const payload = decoded.getPayload();
       const result = await createUser({
         email: payload.email,
         name: payload.name,
         avatar: payload.picture,
+        googleId: payload.sub,
       });
 
       const accessToken = signAccessToken(result._id);
