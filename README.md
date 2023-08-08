@@ -39,7 +39,7 @@
 
 ### Built With
 
-- [![Node][https://img.shields.io/badge/node.js-%23339933.svg?&style=for-the-badge&logo=node.js&logoColor=white]][https://nodejs.org/]
+- <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node.js-%23339933.svg?&style=for-the-badge&logo=node.js&logoColor=white" alt="node"></a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
